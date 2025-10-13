@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sudu_Araliya — Modern E‑Commerce Template</title>
+<meta name="description" content="Modern, accessible e-commerce HTML template — semantic structure, product grid, cart, and components ready for CSS & JavaScript." />
+<!-- Link to external stylesheet (will be created next) -->
+<link rel="stylesheet" href="styles.css" />
+<!-- Favicons (placeholder) -->
+<link rel="icon" href="/favicon.ico" />
+<!-- Fonts: use user's choice later; kept as comments for now -->
+<!-- <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet"> -->
+</head>
+<body>
+
+
+  <!-- =========================
+       HEADER — Sudu Araliya
+       ========================= -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#" class="logo">
+        <img src="logo1.jpg" alt="Sudu Araliya logo" class="logo-img" />
+        <span class="brand-name">Sudu<span class="highlight">_Araliya</span></span>
+      </a>
+
+      <nav class="main-nav">
+        <ul class="nav-list">
+          <li><a href="#home" class="nav-link active">Home</a></li>
+          <li><a href="#collections" class="nav-link">Collections</a></li>
+          <li><a href="#aboutus" class="nav-link">About Us</a></li>
+          <li><a href="#contact" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="header-actions">
+        <button class="cart-btn" aria-label="View cart">
+          🛒<span class="cart-count">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- =========================
+       ADMIN PANEL SECTION
+       ========================= -->
+  <div class="admin-container">
+    <header class="admin-header">
+      <h2>🛍 Product Admin Panel</h2>
+      <button class="close-btn">Close</button>
+    </header>
+
+    <form class="product-form">
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text" placeholder="Enter product name">
+      </div>
+
+      <div class="form-group">
+        <label>Discount Off (%)</label>
+        <input type="number" placeholder="0">
+      </div>
+
+      <div class="form-group">
+        <label>SKU No</label>
+        <input type="number" placeholder="Enter SKU number">
+      </div>
+
+      <div class="form-group">
+        <label>New Price (LKR)</label>
+        <input type="number" step="0.01" placeholder="0.00">
+      </div>
+
+      <div class="form-group">
+        <label>Old Price (LKR)</label>
+        <input type="number" step="0.01" placeholder="0.00">
+      </div>
+
+      <div class="form-group">
+        <label>Upload Images</label>
+        <input type="file" accept="image/*" multiple>
+      </div>
+
+      <div class="form-group">
+        <label>Category</label>
+        <select id="category">
+          <option>Frocks</option>
+          <option>Skirts</option>
+          <option>Top or Blouses</option>
+          <option>Denim Jeans</option>
+          <option>Leggings</option>
+          <option>Plazzo Bottoms</option>
+        </select>
+      </div>
+   
+      <div class="form-group">
+        <label>Sizes</label>
+        <input type="text" placeholder="Enter size">
+      </div>
+
+ <div class="form-group">
+        <label>Colour</label>
+        <input type="text" placeholder="write the Colour">
+      </div>
+
+
+Rizan Mohamed, [13/10/2025 11:11]
+<div class="form-group">
+        <label>Stock Status</label>
+        <div class="radio-group">
+          <label><input type="radio" name="stock" checked> In Stock</label>
+          <label><input type="radio" name="stock"> Out of Stock</label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Description</label>
+        <textarea placeholder="Enter product description"></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="save-btn">Add / Save Product</button>
+      </div>
+    </form>
+
+    <section class="uploaded-products">
+      <h3>Uploaded Products</h3>
+      <div class="product-list">
+        <div class="product-item">
+          <img src="https://via.placeholder.com/100" alt="Product">
+          <div class="product-info">
+            <h4>Sample Product</h4>
+            <p>LKR 1500.00</p>
+          </div>
+          <div class="actions">
+            <button class="edit-btn">Edit</button>
+            <button class="delete-btn">Delete</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+<!-- =========================
+     HERO SECTION — Sudu Araliya
+     ========================= -->
+<section class="hero-section" id="home">
+  <div class="hero-content">
+    <h1 class="hero-title">Sudu<span class="accent">_Araliya</span></h1>
+    <h2 class="hero-subtitle">Elegance in Every Stitch</h2>
+    <p class="hero-text">
+      Discover our handpicked collection of ladies’ dresses designed to bring out your confidence, charm, and grace — perfect for every special moment.
+    </p>
+    <a href="#collections" class="btn-buy">🌹 Browse Categories</a>
+  </div>
+</section>
+<!-- =========================
+     CATEGORY SECTION — Sudu Araliya
+     ========================= -->
+<section class="category-section" id="collections">
+  <h2 class="section-title">Shop by Category</h2>
+
+  <div class="category-grid">
+    <!-- Mixed Collection -->
+    <a href="#shop" class="category-card">
+      <img src="showroom.webp" alt="Mixed Collection" />
+      <div class="category-info">
+        <h3>Mixed Collection</h3>
+      </div>
+    </a>
+
+    <!-- Frocks -->
+    <a href="#shop" class="category-card">
+      <img src="frock.jpg" alt="Frocks" />
+      <div class="category-info">
+        <h3>Frocks</h3>
+      </div>
+    </a>
+
+    <!-- Blouses -->
+    <a href="#shop" class="category-card">
+      <img src="tops.jpg" alt="Blouses" />
+      <div class="category-info">
+        <h3> Tops and Blouses</h3>
+      </div>
+    </a>
+
+    <!-- Skirts -->
+    <a href="#shop" class="category-card">
+      <img src="skirt.jpg" alt="Skirts" />
+      <div class="category-info">
+        <h3>Skirts</h3>
+      </div>
+    </a>
+
+    <!-- Denim Jeans -->
+    <a href="#shop" class="category-card">
+      <img src="jeans.jpg" alt="Denim Jeans" />
+      <div class="category-info">
+        <h3>Denim Jeans</h3>
+      </div>
+    </a>
+
+    <!-- Leggings and Palazzo Bottoms -->
+    <a href="#shop" class="category-card">
+      <img src="plazo.jpg" alt="Leggings and Palazzo Bottoms" />
+      <div class="category-info">
+        <h3>Leggings & Palazzo Bottoms</h3>
+      </div>
+    </a>
+  </div>
+</section>
+<!-- =========================
+     PRODUCT SECTION — Sudu Araliya
+     ========================= -->
+<section class="product-section" id="products">
+  <h2 class="section-title">Choose Our Valuable Products</h2>
+
+  <div class="product-grid">
+    <!-- Product Card 1 -->
+    <div class="product-card">
+      <div class="stock-badge in-stock">In stock</div>
+      <img src="plazo.jpg" alt="Piping Detail Curved Hem Maxi Shirt Dress">
+      <h3>Piping Detail Curved Hem Maxi Shirt Dress</h3>
+      <p class="price">LKR 4,450.00</p>
+    </div>
+
+    <!-- Product Card 2 -->
+    <div class="product-card">
+      <div class="stock-badge in-stock">In stock</div>
+      <img src="frock.jpg" alt="Floral Embroidery Detail Kurta Top">
+      <h3>Floral Embroidery Detail Kurta Top</h3>
+      <p class="price">LKR 3,890.00</p>
+    </div>
+
+    <!-- Product Card 3 -->
+    <div class="product-card">
+      <div class="stock-badge out-stock">Out of stock</div>
+      <img src="skirt.jpg" alt="Embroidery Detail Puff Sleeve Blouse">
+      <h3>Embroidery Detail Puff Sleeve Blouse</h3>
+      <p class="price">LKR 3,690.00</p>
+    </div>
+
+    <!-- Product Card 4 -->
+    <div class="product-card">
+      <div class="stock-badge in-stock">In stock</div>
+      <img src="jeans.jpg" alt="Embroidery Detail Raglan Bell Sleeve Blouse">
+      <h3>Embroidery Detail Raglan Bell Sleeve Blouse</h3>
+      <p class="price">LKR 3,650.00</p>
+    </div>
+  </div>
+</section>
+<!-- =========================
+     CONTACT SECTION — Sudu Araliya
+     ========================= -->
+<section class="contact-section" id="contact">
+  <h2 class="section-title">Contact Us</h2>
+
+  <div class="contact-info">
+    <div class="contact-item">
+      <h4>Phone</h4>
+      <p>078 887 8600</p>
+    </div>
+    <div class="contact-item">
+      <h4>Email</h4>
+      <p>rizanrs221@gmail.com</p>
+    </div>
+    <div class="contact-item">
+      <h4>Location</h4>
+      <p>Main Street, Matale, Sri Lanka</p>
+    </div>
+    <div class="contact-item">
+      <h4>Response Time</h4>
+      <p>Monday – Saturday, 9:00 AM – 7:00 PM</p>
+    </div>
+  </div>
+
+  <a
+    href="https://wa.me/94788878600"
+    target="_blank"
+    class="btn-whatsapp"
+  >
+    💬 Chat With Us On WhatsApp
+  </a>
+</section>
+<!-- =========================
+     ABOUT SECTION — Sudu Araliya
+     ========================= -->
+<section id="aboutus" class="about-section">
+  <div class="container">
+    <h2 class="section-title">About Sudu Araliya</h2>
+    <p class="section-subtitle">
+      Born from a love for elegance and femininity,
+      <strong>Sudu Araliya</strong> celebrates every woman with dresses
+      that blend timeless charm, modern trends, and pure sophistication.
+    </p>
+
+    <div class="story-card">
+      <h3>Our Story</h3>
+      <p>
+        <strong>Sudu Araliya</strong> began as a dream to bring beauty and confidence
+        to every woman through fashion. What started as a small boutique has blossomed
+        into a trusted destination for ladies’ wear, known for graceful styles and attention to detail.
+      </p>
+
+      <div class="mission-box">
+        <h4>Our Mission</h4>
+        <p>
+          To empower women to express their elegance and individuality with dresses that combine
+          comfort, confidence, and quality — because every woman deserves to feel beautiful every day.
+        </p>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature">
+          <div class="icon">👗</div>
+          <h5>Elegant Designs</h5>
+          <p>Thoughtful pieces designed to enhance natural beauty and grace.</p>
+        </div>
+
+        <div class="feature">
+          <div class="icon">🧵</div>
+          <h5>Quality Fabrics</h5>
+          <p>We select only the finest materials for comfort and durability.</p>
+        </div>
+
+        <div class="feature">
+          <div class="icon">🚚</div>
+          <h5>Fast Delivery</h5>
+          <p>Your favorite looks delivered quickly and safely to your doorstep.</p>
+        </div>
+
+        <div class="feature">
+          <div class="icon">💖</div>
+          <h5>Customer Care</h5>
+          <p>We’re here to make your shopping experience delightful.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="why-choose">
+      <h3>Why Choose Sudu Araliya?</h3>
+      <p>
+        Because fashion is more than what you wear — it’s how you feel.
+        At <strong>Sudu Araliya</strong>, we’re dedicated to offering dresses
+        that make you shine with confidence, elegance, and joy.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- =========================
+     FOOTER — Sudu Araliya
+     ========================= -->
+<footer class="site-footer">
+  <div class="footer-content">
+    <h3>Sudu_Araliya</h3>
+    <p>Stay connected with us for new arrivals, offers, and style inspiration.</p>
+
+    <form class="subscribe-form">
+      <input
+        type="email"
+        placeholder="Enter your email"
+        required
+        class="subscribe-input"
+      />
+      <button type="submit" class="subscribe-btn">Subscribe</button>
+    </form>
+
+    <p class="footer-credit">
+      © <span id="year"></span> Sudu_Araliya — Designed & Developed with 💖
+    </p>
+  </div>
+</footer>
+<!-- ADMIN PANEL TOGGLE BUTTON -->
+<button id="adminToggleBtn" class="admin-toggle-btn">
+  <span>⚙️</span> Admin Panel
+</button>
+
+<!-- =========================
+     BOTTOM NAVIGATION BAR (inline SVG icons)
+     ========================= -->
+<nav class="bottom-nav" role="navigation" aria-label="Mobile bottom navigation">
+  <a href="#home" class="nav-item active" aria-label="Home">
+    <!-- Home SVG -->
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+      <path d="M3 11.5L12 4l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V11.5z" fill="currentColor"/>
+    </svg>
+    <span>Home</span>
+  </a>
+
+  <a href="#aboutus" class="nav-item" aria-label="About us">
+    <!-- Info SVG -->
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+      <path d="M12 2a10 10 0 1 0 .001 20.001A10 10 0 0 0 12 2zm1 15v-6h-2v6h2zm0-8V7h-2v2h2z" fill="currentColor"/>
+    </svg>
+    <span>About</span>
+  </a>
+
+  <a href="#collections" class="nav-item" aria-label="Categories">
+    <!-- Grid / Categories SVG -->
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+      <path d="M3 3h8v8H3V3zm10 0h8v8h-8V3zM3 13h8v8H3v-8zm10 10h8v-8h-8v8z" fill="currentColor"/>
+    </svg>
+    <span>Category</span>
+  </a>
+
+  <a href="#contact" class="nav-item" aria-label="Contact">
+    <!-- Phone / Contact SVG -->
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+      <path d="M6.6 10.2a15.05 15.05 0 0 0 7.2 7.2l2.0-2.0a1 1 0 0 1 1.0-.24c1.12.37 2.33.57 3.56.57a1 1 0 0 1 1 1v3.5a1 1 0 0 1-1 1A18 18 0 0 1 3 6.5a1 1 0 0 1 1-1H7.5a1 1 0 0 1 1 1c0 1.23.2 2.44.57 3.56a1 1 0 0 1-.24 1.0l-2.23 2.14z" fill="currentColor"/>
+    </svg>
+    <span>Contact</span>
+  </a>
+</nav>
+<!-- =========================
+     SCRIPTS — Sudu Araliya
+     ========================= -->
+
+<!-- Supabase Client -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.6/dist/umd/supabase.min.js"></script>
+
+  
+  console.log("✅ Supabase connected successfully!");
+</script>
+
+<!-- Main App Logic -->
+<script src="script.js"></script>
+
+</body>
+</html>

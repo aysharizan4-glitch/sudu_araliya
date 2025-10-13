@@ -1,0 +1,1301 @@
+/* ============================
+   HEADER — Sudu Araliya
+   ============================ */
+
+/* Root variables for easy theme control */
+:root {
+  --brand-color: #0dc00a; /* soft rose pink */
+  --text-color: #f9f7f7;
+  --bg-color: #191d1af3;
+  --accent-color: #14b50b;
+  --transition: all 0.3s ease;
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --font-family: 'Playfair Display', serif;
+}
+
+/* Header wrapper */
+.site-header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: var(--bg-color);
+  box-shadow: var(--shadow);
+  z-index: 1000;
+  animation: headerSlide 0.7s ease forwards;
+}
+
+/* Slide down on load animation */
+@keyframes headerSlide {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Container layout */
+.header-inner {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Logo section */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.logo-img {
+  width: 45px;
+  height: 45px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--accent-color);
+  transition: var(--transition);
+}
+
+.logo-img:hover {
+  transform: rotate(-5deg) scale(1.05);
+}
+
+.brand-name {
+  font-family: var(--font-family);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-color);
+  letter-spacing: 1px;
+}
+
+.brand-name .highlight {
+  color: var(--accent-color);
+}
+
+
+
+/* If you want it visible on mobile or toggle later, we’ll handle it with JS */
+.nav-list {
+  display: flex;
+  gap: 25px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-link {
+  text-decoration: none;
+  font-weight: 500;
+  color: var(--text-color);
+  position: relative;
+  transition: var(--transition);
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background: var(--accent-color);
+  transition: var(--transition);
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+.nav-link:hover {
+  color: var(--accent-color);
+}
+
+/* Header actions */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.cart-btn {
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+  position: relative;
+  transition: var(--transition);
+  margin-right: 10px;
+}
+
+.cart-btn:hover {
+  transform: scale(1.1);
+  color: var(--accent-color);
+}
+
+.cart-count {
+  position: absolute;
+  top: -5px;
+  right: -10px;
+  background: var(--accent-color);
+  color: #0d0d0d;
+  font-size: 0.7rem;
+  border-radius: 50%;
+  padding: 2px 5px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .main-nav {
+    display: block; /* Visible on mobile if needed */
+  }
+
+  .nav-list {
+    flex-direction: column;
+    gap: 15px;
+    background: var(--bg-color);
+    padding: 15px;
+    border-top: 1px solid #eee;
+  }
+
+  .header-inner {
+    flex-wrap: wrap;
+  }
+}
+
+
+/* ====== ADMIN PANEL ====== */
+.admin-container {
+  width: 90%;
+  max-width: 850px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  margin: 30px 0;
+  margin-top: 40px;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+.admin-header h2 {
+  font-size: 1.4rem;
+  color: #333;
+  font-weight: 600;
+}
+
+.close-btn {
+  background: #e74c3c;
+  border: none;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.close-btn:hover {
+  background: #c0392b;
+}
+
+.product-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #333;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="file"],
+select,
+textarea {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: 0.3s;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #3cb371;
+  box-shadow: 0 0 0 2px rgba(60, 179, 113, 0.2);
+}
+
+textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.radio-group {
+  display: flex;
+  gap: 20px;
+}
+
+.form-actions {
+  text-align: center;
+  margin-top: 10px;
+}
+
+.save-btn {
+  background: #04a41c;
+  color: #fff;
+  border: none;
+  padding: 10px 28px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.save-btn:hover {
+  background: #2e8b57;
+}
+
+.hidden {
+  display: none;
+}
+
+/* ====== UPLOADED PRODUCTS ====== */
+.uploaded-products {
+  margin-top: 30px;
+}
+
+.uploaded-products h3 {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.product-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.product-item {
+  display: flex;
+  align-items: center;
+  background: #f9fafc;
+  padding: 12px;
+  border-radius: 10px;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.product-item img {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.product-info {
+  flex: 1;
+  margin-left: 15px;
+}
+.product-info h4 {
+  margin: 0;
+  font-size: 1rem;
+  color: #222;
+}
+
+.product-info p {
+  color: #555;
+  font-weight: 500;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.edit-btn,
+.delete-btn {
+  border: none;
+  padding: 7px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: white;
+  font-size: 13px;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+.edit-btn {
+  background: #27ae60;
+}
+
+.edit-btn:hover {
+  background: #219150;
+}
+
+.delete-btn {
+  background: #c0392b;
+}
+
+.delete-btn:hover {
+  background: #a93226;
+}
+
+/* ====== RESPONSIVE DESIGN ====== */
+@media (max-width: 768px) {
+  /* Hide navigation on mobile */
+  .main-nav {
+    display: none;
+  }
+
+  .header-inner {
+    justify-content: space-between;
+  }
+
+  .admin-container {
+    width: 98%;
+    padding: 18px;
+  }
+
+  .product-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .product-info {
+    margin-left: 0;
+    margin-top: 10px;
+  }
+
+  .actions {
+    width: 100%;
+    justify-content: flex-end;
+    margin-top: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .brand-name {
+    font-size: 1.2rem;
+  }
+
+  .cart-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+  }
+
+  .save-btn {
+    width: 100%;
+  }
+}
+/* ============================
+   HERO SECTION — Sudu Araliya
+   ============================ */
+
+.hero-section {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background: url("showroom.webp") center/cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #0905f5;
+  overflow: hidden;
+}
+
+/* Soft rose overlay for text readability */
+.hero-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(13, 13, 13, 0.329); /* soft pink overlay */
+  backdrop-filter: brightness(0.9);
+}
+
+/* Content wrapper */
+.hero-content {
+  position: relative;
+  max-width: 650px;
+  padding: 0 20px;
+  z-index: 2;
+  animation: fadeUp 1.2s ease-out both;
+}
+
+/* Animation */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Title */
+.hero-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 5rem;
+  font-weight: bolder;
+  letter-spacing: 1px;
+  margin-bottom: 0.5rem;
+  color: #f8f8fb;
+}
+
+.hero-title .accent {
+  color: #04fc15;
+}
+
+/* Subtitle */
+.hero-subtitle {
+  font-family: 'Poppins', sans-serif;
+  font-size: 2rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+ color: #ff4d01;
+}
+
+/* Paragraph */
+.hero-text {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.5rem;
+  line-height: 1.7;
+  color: #f7f8f8;
+  font-weight: var(--brand-color);
+  margin-bottom: 2rem;
+  animation: fadeUp 1.4s ease-out both;
+  letter-spacing: 1.5px;
+}
+
+/* Buy Now Button */
+.btn-buy {
+  display: inline-block;
+  background: linear-gradient(90deg, #06b93c, #f8f8f9);
+  color: #0b0b0b;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 12px 30px;
+  border-radius: 8px;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-buy:hover {
+  background: #025812;
+  color: #fff;
+  transform: translateY(-3px);
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 2.2rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.2rem;
+  }
+
+  .hero-text {
+    font-size: 0.95rem;
+  }
+
+  .btn-buy {
+    padding: 10px 25px;
+    font-size: 0.95rem;
+  }
+}
+/* ===============================
+   CATEGORY SECTION — Sudu Araliya
+   =============================== */
+.category-section {
+  padding: 60px 20px;
+  background: #fff;
+  text-align: center;
+  font-family: "Poppins", sans-serif;
+}
+
+.category-section .section-title {
+  font-family: "Playfair Display", serif;
+  font-size: 2rem;
+  color: #d63384;
+  margin-bottom: 35px;
+  position: relative;
+}
+
+.category-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* --- Category Card Style --- */
+.category-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, #ffe4f1, #fff);
+  border-radius: 18px;
+  overflow: hidden;
+  text-decoration: none;
+  color: #fff;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 160px;
+  position: relative;
+}
+
+.category-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.1);
+}
+
+/* Different gradient color per card */
+.category-card:nth-child(1) {
+  background: linear-gradient(135deg, #ffb3c6, #ffccd5);
+}
+.category-card:nth-child(2) {
+  background: linear-gradient(135deg, #b3e5fc, #81d4fa);
+}
+.category-card:nth-child(3) {
+  background: linear-gradient(135deg, #b9f6ca, #a5d6a7);
+}
+.category-card:nth-child(4) {
+  background: linear-gradient(135deg, #ffd180, #ffcc80);
+}
+.category-card:nth-child(5) {
+  background: linear-gradient(135deg, #c5cae9, #9fa8da);
+}
+.category-card:nth-child(6) {
+  background: linear-gradient(135deg, #f8bbd0, #f48fb1);
+}
+
+/* --- Image --- */
+.category-card img {
+  width: 45%;
+  height: 100%;
+  object-fit: cover;
+  border-top-right-radius: 18px;
+  border-bottom-right-radius: 18px;
+}
+
+/* --- Text Info --- */
+.category-info {
+  padding-left: 20px;
+  text-align: left;
+  width: 55%;
+}
+
+.category-info h3 {
+  font-size: 1.3rem;
+  color: #fff;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.category-info p {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+  .category-card {
+    flex-direction: row;
+    height: 130px;
+  }
+  .category-info {
+    padding-left: 15px;
+  }
+  .category-info h3 {
+    font-size: 1.1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .category-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+  }
+  .category-card {
+    height: 180px;
+  }
+}
+
+/* =========================
+   PRODUCT SECTION — Sudu Araliya
+   ========================= */
+.product-section {
+  padding: 80px 6%;
+  background: #fff;
+  text-align: center;
+}
+
+.product-section .section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.4rem;
+  color: #04b522;
+  margin-bottom: 60px;
+  position: relative;
+  display: inline-block;
+  letter-spacing: 1px;
+}
+
+.product-section .section-title::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  width: 70%;
+  height: 3px;
+  background: linear-gradient(90deg, #19b504, #99ffbb);
+  transform: translateX(-50%);
+  border-radius: 2px;
+}
+
+/* ----- Grid Layout ----- */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 35px;
+  justify-content: center;
+}
+
+/* ----- Product Card ----- */
+.product-card {
+  background: #fff;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+  text-align: left;
+  position: relative;
+  transition: all 0.4s ease;
+  animation: fadeUp 0.8s ease both;
+}
+
+.product-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 25px rgba(214, 51, 132, 0.2);
+}
+
+/* ----- Product Image ----- */
+.product-card img {
+  width: 100%;
+  height: 340px;
+  object-fit: cover;
+  border-bottom: 1px solid #f3f3f3;
+  transition: transform 0.5s ease;
+}
+
+.product-card:hover img {
+  transform: scale(1.04);
+}
+
+/* ----- Stock Badge ----- */
+.stock-badge {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 6px;
+  color: #fff;
+  letter-spacing: 0.3px;
+  z-index: 2;
+}
+
+.in-stock {
+  background: #05bc1a;
+}
+
+.out-stock {
+  background: #e10358;
+}
+
+/* ----- Product Details ----- */
+.product-card h3 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+  line-height: 1.4;
+  padding: 15px 15px 5px 15px;
+  height: 60px;
+}
+
+.price {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #000;
+  padding: 0 15px 20px 15px;
+}
+
+/* ----- Animation ----- */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ----- Responsive ----- */
+@media (max-width: 992px) {
+  .product-card img {
+    height: 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  .product-section {
+    padding: 60px 5%;
+  }
+  .product-card img {
+    height: 270px;
+  }
+}
+
+@media (max-width: 480px) {
+  .product-section .section-title {
+    font-size: 1.9rem;
+  }
+  .product-card img {
+    height: 250px;
+  }
+}
+/* =========================
+   CONTACT SECTION — Sudu Araliya
+   ========================= */
+.contact-section {
+  padding: 80px 6%;
+  background: #fffafc;
+  text-align: center;
+}
+
+.contact-section .section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.4rem;
+  color: #06ac16;
+  margin-bottom: 40px;
+  position: relative;
+  display: inline-block;
+}
+
+.contact-section .section-title::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  width: 60%;
+  height: 3px;
+  background: linear-gradient(90deg, #04b81f, #99ffb9);
+  transform: translateX(-50%);
+  border-radius: 2px;
+}
+/* =====================================
+   ABOUT SECTION — Sudu Araliya Boutique
+   ===================================== */
+.about-section {
+  background: linear-gradient(180deg, #80fa8c 0%, #f4f7f5 100%);
+  padding: 100px 20px;
+  color: #4b2c2c;
+  font-family: "Poppins", sans-serif;
+  text-align: center;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Decorative shimmer gradient overlay */
+.about-section::before {
+  content: "";
+  position: absolute;
+  top: -50px;
+  left: -50px;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at top left, rgba(255,192,203,0.15), transparent 70%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.about-section .container {
+  position: relative;
+  z-index: 2;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Headings */
+.section-title {
+  font-family: "Playfair Display", serif;
+  font-size: 2.4rem;
+  color: #07b607;
+  font-weight: 700;
+  margin-bottom: 15px;
+  position: relative;
+  display: inline-block;
+}
+
+.section-title::after {
+  content: "";
+  position: absolute;
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, #04b81f, #99ffb9);
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 3px;
+}
+
+.section-subtitle {
+  max-width: 720px;
+  margin: 0 auto 50px;
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: #5a4a4a;
+}
+
+/* Story Card */
+.story-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+  padding: 45px 35px;
+  text-align: left;
+  transition: all 0.4s ease;
+}
+
+.story-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.08);
+}
+
+.story-card h3 {
+  font-family: "Playfair Display", serif;
+  font-size: 1.7rem;
+  color: #08b01f;
+  margin-bottom: 12px;
+}
+
+.story-card p {
+  color: #5c4b4b;
+  line-height: 1.8;
+  margin-bottom: 25px;
+}
+
+/* Mission Box */
+.mission-box {
+  background: linear-gradient(135deg, #7ff099 0%, #fff9fb 100%);
+  border-left: 5px solid #07b724;
+  border-radius: 10px;
+  padding: 22px 25px;
+  margin-bottom: 40px;
+}
+
+.mission-box h4 {
+  color: #07b104;
+  font-size: 1.2rem;
+  margin-bottom: 6px;
+}
+
+/* Features Grid */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 25px;
+  margin-top: 30px;
+}
+
+.feature {
+  background: #cef6d9;
+  border-radius: 14px;
+  padding: 28px 20px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.04);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-align: center;
+  position: relative;
+}
+
+.feature:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.06);
+}
+
+.feature .icon {
+  font-size: 2.2rem;
+  margin-bottom: 10px;
+  color: #07b60d;
+}
+
+.feature h5 {
+  font-family: "Playfair Display", serif;
+  color: #08b308;
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
+.feature p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #5a4a4a;
+}
+
+/* Why Choose */
+.why-choose {
+  margin-top: 70px;
+  background: linear-gradient(145deg, #9cf4a2, #fff);
+  border-radius: 18px;
+  padding: 40px 25px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.3s ease;
+}
+
+.why-choose:hover {
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.07);
+}
+
+.why-choose h3 {
+  font-family: "Playfair Display", serif;
+  font-size: 1.7rem;
+  color: #0ba543;
+  margin-bottom: 12px;
+}
+
+.why-choose p {
+  max-width: 750px;
+  margin: 0 auto;
+  color: #5c4b4b;
+  line-height: 1.8;
+}
+
+/* Fade-in on Scroll */
+.about-section .story-card,
+.about-section .why-choose {
+  opacity: 0;
+  transform: translateY(40px);
+  animation: fadeInUp 1.3s ease forwards;
+}
+.about-section .why-choose {
+  animation-delay: 0.3s;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .about-section {
+    padding: 70px 15px;
+  }
+  .story-card {
+    text-align: center;
+    padding: 35px 20px;
+  }
+  .mission-box {
+    text-align: center;
+  }
+  .why-choose {
+    padding: 30px 18px;
+  }
+}
+
+/* ----- Contact Info Grid ----- */
+.contact-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 25px;
+  margin-bottom: 40px;
+}
+
+.contact-item {
+  background: #fff;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.contact-item:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 6px 18px rgba(214, 51, 132, 0.15);
+}
+
+.contact-item h4 {
+  font-family: 'Poppins', sans-serif;
+  color: #0ba543;
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
+.contact-item p {
+  color: #444;
+  font-size: 0.95rem;
+}
+
+/* ----- WhatsApp Button ----- */
+.btn-whatsapp {
+  display: inline-block;
+  padding: 14px 28px;
+  background: #25d366;
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  border-radius: 50px;
+  text-decoration: none;
+  box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+  transition: all 0.4s ease;
+}
+
+.btn-whatsapp:hover {
+  background: #1ebe5d;
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+  transform: translateY(-3px);
+}
+
+/* =========================
+   FOOTER — Sudu Araliya
+   ========================= */
+.site-footer {
+  background: linear-gradient(135deg, #0ac504, #b4f8c4);
+  color: #0f0e0e;
+  text-align: center;
+  padding: 60px 5%;
+}
+
+.footer-content h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.9rem;
+  margin-bottom: 10px;
+}
+
+.footer-content p {
+  font-size: 1rem;
+  max-width: 600px;
+  margin: 0 auto 25px;
+  line-height: 1.6;
+}
+
+/* ----- Subscribe Form ----- */
+.subscribe-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.subscribe-input {
+  padding: 12px 16px;
+  border: none;
+  border-radius: 6px;
+  width: 260px;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.subscribe-btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  background: #fff;
+  color: #0ba543;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.subscribe-btn:hover {
+  background: #caefda;
+  transform: translateY(-2px);
+}
+
+/* ----- Footer Credit ----- */
+.footer-credit {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  margin-top: 15px;
+}
+
+/* =========================
+   RESPONSIVE DESIGN
+   ========================= */
+@media (max-width: 768px) {
+  .contact-section,
+  .about-section,
+  .site-footer {
+    padding: 60px 5%;
+  }
+
+  .section-title {
+    font-size: 2rem;
+  }
+
+  .about-text {
+    text-align: center;
+  }
+}
+/* ===============================
+   ADMIN PANEL TOGGLE BUTTON
+   =============================== */
+.admin-toggle-btn {
+ 
+  bottom: 25px;
+  right: 25px;
+  background: linear-gradient(135deg, #03ac0e, #84f5ad);
+  color: #fff;
+  font-weight: 600;
+  font-family: "Poppins", sans-serif;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 10px;
+  box-shadow: 0 5px 20px rgba(214, 51, 132, 0.3);
+  cursor: pointer;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.admin-toggle-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 25px rgba(214, 51, 132, 0.4);
+}
+
+.admin-toggle-btn span {
+  font-size: 1.2rem;
+}
+
+/* Optional pulse animation to draw attention */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(214, 51, 132, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 12px rgba(214, 51, 132, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(214, 51, 132, 0);
+  }
+}
+
+.admin-toggle-btn {
+  animation: pulse 2s infinite;
+}
+
+/* =========================
+   MOBILE BOTTOM NAVIGATION (inline SVG icons)
+   ========================= */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  background: #111010;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  box-shadow: 0 -3px 18px rgba(0,0,0,0.08);
+  z-index: 9999;
+  padding: 6px 10px;
+}
+
+/* Each nav item */
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 0.75rem;
+  color: #fbfdfc;
+  text-decoration: none;
+  transition: color 0.2s ease, transform 0.12s ease;
+  gap: 4px;
+}
+
+/* SVG sizing & color inherit */
+.nav-item svg {
+  display: block;
+  width: 22px;
+  height: 22px;
+  color: #07a915;          /* icon color */
+  opacity: 0.95;
+  transition: transform 0.18s ease, opacity 0.18s ease;
+}
+
+/* Label */
+.nav-item span {
+  display: block;
+  font-size: 11px;
+  line-height: 1;
+  margin-top: 2px;
+  color: inherit;
+}
+
+/* Active / hover state */
+.nav-item:hover,
+.nav-item.active {
+  color: #f7faf8;
+  transform: translateY(-3px);
+}
+.nav-item:hover svg,
+.nav-item.active svg {
+  transform: translateY(-2px);
+  opacity: 1;
+}
+
+/* Hide bottom nav on desktop */
+@media (min-width: 769px) {
+  .bottom-nav {
+    display: none !important;
+  }
+}
+
+/* Adjustments for small devices */
+@media (max-width: 400px) {
+  .bottom-nav { height: 56px; }
+  .nav-item svg { width: 20px; height: 20px; }
+  .nav-item span { font-size: 10px; }
+}
