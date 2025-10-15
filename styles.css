@@ -798,6 +798,68 @@ textarea {
     height: 250px;
   }
 }
+:root{
+  --accent:#d63384;
+  --muted:#666;
+  --bg:#fafafa;
+  --card:#fff;
+  --success:#2e7d32;
+  --danger:#c62828;
+  --blue:#2b6cb0;
+}
+*{box-sizing:border-box}
+body{font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;margin:0;background:var(--bg);color:#111}
+.pd-header{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:#fff;border-bottom:1px solid #eee}
+.back{background:none;border:0;font-size:16px;color:var(--accent);cursor:pointer}
+.cart-info{font-weight:600;color:var(--muted)}
+
+.container{max-width:1100px;margin:18px auto;padding:0 16px}
+.product-page{display:grid;grid-template-columns:1fr 420px;gap:20px;align-items:start}
+@media (max-width:980px){ .product-page{grid-template-columns:1fr; } }
+
+/* gallery */
+.gallery{display:flex;flex-direction:column;gap:10px}
+.main-image-wrap{position:relative;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 8px 28px rgba(15,15,15,0.06)}
+.main-image{width:100%;height:60vh;max-height:700px;object-fit:contain;background:#f5f5f5;display:block}
+.nav-btn{position:absolute;top:50%;transform:translateY(-50%);border:0;background:rgba(0,0,0,0.25);color:#fff;width:44px;height:44px;border-radius:50%;cursor:pointer;font-size:22px}
+.prev{left:10px} .next{right:10px}
+.thumbs{display:flex;gap:8px;overflow:auto;padding:8px 2px}
+.thumbs img{width:88px;height:88px;object-fit:cover;border-radius:8px;cursor:pointer;border:2px solid transparent;opacity:0.9}
+.thumbs img.active{border-color:var(--accent);opacity:1}
+
+/* details */
+.details{background:var(--card);padding:18px;border-radius:10px;box-shadow:0 8px 28px rgba(15,15,15,0.05)}
+.p-name{margin:0;font-size:1.4rem}
+.sku{color:var(--muted);font-size:0.9rem;margin-top:6px}
+.price-row{display:flex;align-items:center;gap:12px;margin-top:12px}
+.old-price{color:var(--blue);text-decoration:line-through;opacity:0.8;filter: blur(0.3px)}
+.new-price{font-weight:800;font-size:1.25rem;color:var(--accent)}
+.discount{background:var(--accent);color:#fff;padding:6px 8px;border-radius:8px;font-weight:700;margin-left:auto}
+
+.stock{margin-top:10px;padding:6px 8px;border-radius:8px;display:inline-block;font-weight:700}
+.stock.in{background:rgba(46,125,50,0.12);color:var(--success);border:1px solid rgba(46,125,50,0.14)}
+.stock.out{background:rgba(198,56,49,0.08);color:var(--danger);border:1px solid rgba(198,56,49,0.12)}
+
+.selectors{margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:480px){ .selectors{grid-template-columns:1fr} }
+label{font-size:0.85rem;color:var(--muted);display:block;margin-bottom:6px}
+select,input[type="number"]{width:100%;padding:10px;border-radius:8px;border:1px solid #e6e6e6;background:#fff;font-size:1rem}
+
+.qty-row{display:flex;align-items:center;gap:8px}
+.qty-btn{padding:8px 12px;border-radius:8px;border:1px solid #ddd;background:#fff;cursor:pointer}
+
+.actions{display:flex;gap:10px;margin-top:16px}
+.btn{padding:12px 14px;border-radius:8px;border:1px solid #ddd;background:#fff;cursor:pointer;font-weight:700;flex:1}
+.btn-primary{background:var(--accent);color:#fff;border:0}
+.btn-secondary{background:#fff;border:1px solid var(--accent);color:var(--accent)}
+
+.desc{margin-top:18px;padding-top:6px}
+.related{margin-top:18px}
+.related-grid{display:flex;gap:10px;overflow:auto;padding:8px 0}
+.related-card{min-width:140px;background:#fff;border-radius:8px;padding:8px;box-shadow:0 6px 16px rgba(0,0,0,0.05);cursor:pointer;text-align:center}
+.related-card img{width:100%;height:120px;object-fit:cover;border-radius:6px}
+.muted{color:var(--muted)}
+
 /* =========================
    CONTACT SECTION — Sudu Araliya
    ========================= */
@@ -1187,9 +1249,9 @@ textarea {
   font-weight: 600;
   font-family: "Poppins", sans-serif;
   border: none;
-  padding: 12px 18px;
+  margin-left: 40%;
   border-radius: 10px;
-  box-shadow: 0 5px 20px rgba(214, 51, 132, 0.3);
+  box-shadow: 0 5px 20px rgba(240, 5, 123, 0.3);
   cursor: pointer;
   z-index: 9999;
   display: flex;
