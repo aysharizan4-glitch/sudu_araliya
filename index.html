@@ -3,14 +3,10 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Sudu_Araliya — Modern E‑Commerce Template</title>
+<title>Sudu_Araliya</title>
 <meta name="description" content="Modern, accessible e-commerce HTML template — semantic structure, product grid, cart, and components ready for CSS & JavaScript." />
 <!-- Link to external stylesheet (will be created next) -->
 <link rel="stylesheet" href="styles.css" />
-<!-- Favicons (placeholder) -->
-<link rel="icon" href="/favicon.ico" />
-<!-- Fonts: use user's choice later; kept as comments for now -->
-<!-- <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet"> -->
 </head>
 <body>
 
@@ -120,17 +116,9 @@
       </div>
     </form>
 
-    <section class="uploaded-products">
-      <h3>Uploaded Products</h3>
       <div class="product-list">
-        <div class="product-item">
-          <img src="https://via.placeholder.com/100" alt="Product">
-          <div class="product-info">
-            <h4>Sample Product</h4>
-            <p>LKR 1500.00</p>
           </div>
-          <div class="actions">
-            <button class="edit-btn">Edit</button>
+            <div button class="edit-btn">Edit</button>
             <button class="delete-btn">Delete</button>
           </div>
         </div>
@@ -207,89 +195,109 @@
     </a>
   </div>
 </section>
-<!-- =========================
-     PRODUCT SECTION — Sudu Araliya
-     ========================= -->
-<section class="product-section" id="products">
-  <h2 class="section-title">Choose Our Valuable Products</h2>
 
-  <div class="product-grid">
-    <!-- Product Card 1 -->
-    <div class="product-card">
-      <div class="stock-badge in-stock">In stock</div>
-      <img src="plazo.jpg" alt="Piping Detail Curved Hem Maxi Shirt Dress">
-      <h3>Piping Detail Curved Hem Maxi Shirt Dress</h3>
-      <p class="price">LKR 4,450.00</p>
+  <!-- ========================= PRODUCT SECTION (demo) — Sudu Araliya ========================= -->
+
+    <div class="product-grid">
+            <!-- Product Card 1 -->
+  <div class="product-card">
+ <div class="badge-stock">Out of stock</div>
+ <img src="frock.jpg" alt="Product 1" class="product-img">
+   <div class="product-info"> 
+  <h3 class="brand">Beverly Hills Polo Club</h3>
+   <div class="price-section">
+    <p class="new-price">LKR 1890.00</p> 
+    <p class="old-price">LKR 4525.00</p>
+     <div class="discount-badge">45% OFF</div> 
+       </div>
+   <p class="desc">Beverly Hills Polo Club Printed Cotton Top</p>
+   </div>
+    <button class="view-detail">View Details</button> 
+  </div> 
+
+        <!-- Product Card 2 -->
+ <div class="product-card"> 
+ <div class="badge-stock">In stock</div> 
+<img src="jeans.jpg" alt="Product 2" class="product-img">
+<div class="discount-badge">30% OFF</div>
+ <div class="product-info">
+ <h3 class="brand">Bigdart</h3> 
+ <div class="price-section">
+<p class="new-price">LKR 2950.00</p> 
+<p class="old-price">LKR 5415.00</p>
+ </div> 
+ <p class="desc">Bigdart Floral Print Viscose Top</p> 
+</div> 
+  <button class="view-detail"> View Details </button>
     </div>
 
-    <!-- Product Card 2 -->
-    <div class="product-card">
-      <div class="stock-badge in-stock">In stock</div>
-      <img src="frock.jpg" alt="Floral Embroidery Detail Kurta Top">
-      <h3>Floral Embroidery Detail Kurta Top</h3>
-      <p class="price">LKR 3,890.00</p>
-    </div>
+         <!-- Product Card 3 -->
+  <div class="product-card"> 
+<div class="badge-stock">Out Of stock</div> 
+  <img src="plazo.jpg" alt="Product 3" class="product-img">
+ <div class="discount-badge">45% OFF</div>
+  <div class="product-info">
+  <h3 class="brand">Beverly Hills Polo Club</h3>
+     <div class="price-section">
+<p class="new-price">LKR 3895.00</p> 
+<p class="old-price">LKR 6495.00</p>
+     </div>
+<p class="desc">Beverly Hills Polo Club Printed Cotton Top</p>
+ </div>
+  <button class="view-detail"> View Details </button> 
+  </div> 
 
-    <!-- Product Card 3 -->
-    <div class="product-card">
-      <div class="stock-badge out-stock">Out of stock</div>
-      <img src="skirt.jpg" alt="Embroidery Detail Puff Sleeve Blouse">
-      <h3>Embroidery Detail Puff Sleeve Blouse</h3>
-      <p class="price">LKR 3,690.00</p>
-    </div>
-
-    <!-- Product Card 4 -->
-    <div class="product-card">
-      <div class="stock-badge in-stock">In stock</div>
-      <img src="jeans.jpg" alt="Embroidery Detail Raglan Bell Sleeve Blouse">
-      <h3>Embroidery Detail Raglan Bell Sleeve Blouse</h3>
-      <p class="price">LKR 3,650.00</p>
-    </div>
+       <!-- Product Card 4 -->
+  <div class="product-card">
+   <div class="badge-stock">In stock</div> 
+ <img src="jeans.jpg" alt="Product 4" class="product-img"> 
+    <div class="discount-badge">30% OFF</div> 
+  <div class="product-info">
+  <h3 class="brand">Bigdart</h3> <div class="price-section">
+    <p class="new-price">LKR 3250.00 <p class="old-price">LKR 7650.00 </p>
+        </div> <p class="desc">Bigdart Floral Print Viscose Top</p>
+       </div>
+   <button class="view-detail"> View Details </button>
   </div>
-</section>
-
-<!-- ======== AFTER CLICK A PRODUCT — Sudu Araliya=========== -->
-
-  <main class="container"> 
-  <section class="product-page" style="display:none;">
-   <button id="backToShop" class="btn btn-secondary" style="margin:20px;">← Back to Shop</button>
-   
-   <aside class="gallery"> <div class="main-image-wrap"> 
-    <img id="mainImage" class="main-image" src="" alt="Product image" /> 
-    <button id="prevBtn" class="nav-btn prev">‹</button> 
-    <button id="nextBtn" class="nav-btn next">›</button> 
-  </div> <div id="thumbs" class="thumbs" aria-hidden="false"></div> 
-</aside> <article class="details"> 
-  <h1 id="pName" class="p-name">Product name</h1> 
-  <div class="sku" id="pSku">SKU: -</div>
-   <div class="price-row">
-     <div class="old-price" id="pOldPrice" style="display:none">LKR 0.00</div> 
-     <div class="new-price" id="pNewPrice">LKR 0.00</div> 
-     <div id="pDiscount" class="discount" style="display:none">-0%</div> 
-    </div> <div id="pStock" class="stock in">In stock</div> <div class="selectors"> 
-      <label>Size</label> <select id="sizeSelect"></select> 
-      <label>Colour</label> 
-      <select id="colorSelect"></select> 
-      <label>Quantity</label> 
-      <div class="qty-row"> 
-        <button id="decQty" class="qty-btn">-</button> 
-        <input id="qty" type="number" value="1" min="1" /> 
-        <button id="incQty" class="qty-btn">+</button>
-      </div> 
-      </div> <div class="actions">
-        <button id="addCart" class="btn btn-primary">🛒 Add to Cart</button> 
-        <button id="buyNow" class="btn btn-secondary">💳 Buy Now</button> 
-      </div> 
-      <section class="desc"> <h3>Description</h3> 
-        <p id="pDesc">—</p> 
-      </section> <section class="related"> 
-        <h3>Related products</h3> 
-        <div id="relatedGrid" class="related-grid"></div>
-      </section>
-     </article> 
+ </div>
+              <!-- ======== ORDER PRODUCT (demo) — Sudu Araliya=========== -->
+<main class="container">
+  <section class="product-page">
+     <aside class="gallery"> <div class="main-image-wrap"> 
+    <img id="mainImage" class="main-image" src="jeans.jpg" alt="Product image" />
+     <button id="prevBtn" class="nav-btn prev">‹</button> 
+     <button id="nextBtn" class="nav-btn next">›</button>
+     </div> <div id="thumbs" class="thumbs" aria-hidden="false"></div>
+     </aside> <article class="details"> 
+      <h1 id="pName" class="p-name">Product name</h1>
+       <div class="sku" id="pSku">SKU: -</div>
+        <div class="price-row">
+           <div class="old-price" id="pOldPrice" style="display:none">LKR 0.00</div>
+     <div class="new-price" id="pNewPrice">LKR 0.00</div>
+      <div id="pDiscount" class="discount" style="display:none">-0%</div>
+     </div> <div id="pStock" class="stock in">In stock</div>
+      <div class="selectors"> 
+        <label>Size</label><select id="sizeSelect"></select> 
+      <label>Colour</label><select id="colorSelect"></select> 
+    <label>Quantity</label>
+     <div class="qty-row"> 
+      <button id="decQty" class="qty-btn">-</button>
+   <input id="qty" type="number" value="1" min="1" />
+    <button id="incQty" class="qty-btn">+</button>
+   </div> </div> <div class="actions"> 
+    <button class="add-cart-btn"> 🛒Add To Cart </button>
+     <button id="buyNow" class="BN btn-secondary">💳 Buy Now</button>
+     </div> <section class="desc"> <h3>Description</h3>
+       <p id="pDesc">—</p> 
     </section>
-   </main>
-   </section>
+     <section class="related">
+         <h3>Related products</h3>
+     <div id="relatedGrid" class="related-grid"></div>
+     </section> 
+    </article>
+   </section> 
+  </main> 
+</section> 
 
 <!-- =========================
      CONTACT SECTION — Sudu Araliya
@@ -455,6 +463,10 @@
     <span>Contact</span>
   </a>
 </nav>
+
+
+
+
 <!-- =========================
      SCRIPTS — Sudu Araliya
      ========================= -->

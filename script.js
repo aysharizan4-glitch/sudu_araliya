@@ -1,601 +1,670 @@
-// ===============================
-// Sudu Araliya — Full JavaScript (Upload + Edit + Delete + Product Detail)
-// ===============================
 
-// ---------- Supabase config ----------
-const SUPABASE_URL = "https://wnrvrmdclcsaugipqvnr.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InducnZybWRjbGNzYXVnaXBxdm5yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAyNjU1NDAsImV4cCI6MjA3NTg0MTU0MH0.WSRGCm_pUeZSu-8MMz8a4jEx9p4ZrW8C8S3mrR29xeo";
+// script.js (UPDATED fixes: delete sync, price display in grid, edit=update, out-of-stock blur+disable)
 
+// ----------------- Supabase init (keep your values) -----------------
+const SUPABASE_URL = "https://rzuyavmxugrqocydfljl.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ6dXlhdm14dWdycW9jeWRmbGpsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA2OTk2MTUsImV4cCI6MjA3NjI3NTYxNX0.LtfbIi19rl6khkv1pjvnVtkFNdqj1MYyvMnDB-lVG3E";
 const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-// script.js — COMPLETE for Sudu_Araliya
-// Single-file: Admin (upload/edit/delete) + Product Grid + Product Detail (full-screen) + Cart (localStorage) + Supabase
-// Paste this entire file as your script.js and replace previous versions.
 
-// Wrap in IIFE to avoid global leaks
-(function () {
-  "use strict";
+// ----------------- Configuration / Defaults -----------------
+const STORAGE_BUCKET = "product-images"; // change if different
+const ADMIN_PASSWORD = "admin123"; // client-side only; change or use server-side auth
+const WHATSAPP_NUMBER = "94788878600";
+const CART_KEY = "sudu_cart_v1";
+const ADMIN_LOCALFLAG = "sudu_admin_auth";
 
-  // ---------- Supabase config ----------
-  const SUPABASE_URL = "https://wnrvrmdclcsaugipqvnr.supabase.co";
-  const SUPABASE_ANON_KEY =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InducnZybWRjbGNzYXVnaXBxdm5yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAyNjU1NDAsImV4cCI6MjA3NTg0MTU0MH0.WSRGCm_pUeZSu-8MMz8a4jEx9p4ZrW8C8S3mrR29xeo";
+// ----------------- Helpers -----------------
+const $ = (sel, root = document) => root.querySelector(sel);
+const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+const fmtCurrency = v => `LKR ${Number(v || 0).toFixed(2)}`;
+function escapeHtml(s){ if(!s && s!==0) return ""; return String(s).replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" })[m]); }
 
-  const supabase = window.supabase?.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// ----------------- DOM refs (based on your HTML) -----------------
+const adminToggleBtn = $("#adminToggleBtn");
+const adminContainer = document.querySelector(".admin-container");
+const adminCloseBtn = adminContainer ? adminContainer.querySelector(".close-btn") : null;
+const productForm = adminContainer ? adminContainer.querySelector(".product-form") : null;
+const productListAdmin = adminContainer ? adminContainer.querySelector(".product-list") : null;
 
-  // ---------- DOM references ----------
-  const adminToggleBtn = document.getElementById("adminToggleBtn");
-  const adminContainer = document.querySelector(".admin-container");
-  const productForm = document.querySelector(".product-form");
-  const productListAdmin = document.querySelector(".product-list");
-  const productGrid = document.querySelector(".product-grid");
+const productGrid = document.querySelector(".product-grid");
+const productPage = document.querySelector(".product-page");
+const pName = $("#pName");
+const pSku = $("#pSku");
+const pDesc = $("#pDesc");
+const pNewPrice = $("#pNewPrice");
+const pOldPrice = $("#pOldPrice");
+const pDiscount = $("#pDiscount");
+const pStock = $("#pStock");
+const sizeSelect = $("#sizeSelect");
+const colorSelect = $("#colorSelect");
+const qtyInput = $("#qty");
+const decQty = $("#decQty");
+const incQty = $("#incQty");
+const addCartBtn = document.querySelector(".add-cart-btn");
+const buyNowBtn = $("#buyNow");
+const mainImage = $("#mainImage");
+const thumbs = $("#thumbs");
+const prevBtn = $("#prevBtn");
+const nextBtn = $("#nextBtn");
+const relatedGrid = $("#relatedGrid");
 
-  // Product detail elements (the product-page section)
-  const productPage = document.querySelector(".product-page");
-  const mainImage = document.getElementById("mainImage");
-  const thumbsEl = document.getElementById("thumbs");
-  const pName = document.getElementById("pName");
-  const pSku = document.getElementById("pSku");
-  const pOldPrice = document.getElementById("pOldPrice");
-  const pNewPrice = document.getElementById("pNewPrice");
-  const pDiscount = document.getElementById("pDiscount");
-  const pStock = document.getElementById("pStock");
-  const sizeSelect = document.getElementById("sizeSelect");
-  const colorSelect = document.getElementById("colorSelect");
-  const qtyInput = document.getElementById("qty");
-  const incQty = document.getElementById("incQty");
-  const decQty = document.getElementById("decQty");
-  const addCartBtn = document.getElementById("addCart");
-  const buyNowBtn = document.getElementById("buyNow");
-  const relatedGrid = document.getElementById("relatedGrid");
-  const prevBtn = document.getElementById("prevBtn");
-  const nextBtn = document.getElementById("nextBtn");
+const cartBtn = document.querySelector(".cart-btn");
+const cartCountEl = document.querySelector(".cart-count");
+const subscribeForm = document.querySelector(".subscribe-form");
+const subscribeInput = document.querySelector(".subscribe-input");
+const yearSpan = document.getElementById("year");
 
-  const cartCountEls = document.querySelectorAll(".cart-count");
-  const footerYear = document.getElementById("year");
+// ----------------- State -----------------
+let products = [];
+let currentProduct = null;
+let currentImages = [];
+let mainImageIndex = 0;
+let cart = loadCart();
+let editingProductId = null; // <--- for edit/update tracking
 
-  // small guards if elements are missing
-  if (!supabase) console.warn("Supabase client not available. Check your script include.");
+if (yearSpan) yearSpan.textContent = new Date().getFullYear();
+if (adminContainer) adminContainer.style.display = "none";
 
-  // ---------- state ----------
-  let currentProduct = null;
-  let currentImageIndex = 0;
+// ----------------- Initialization -----------------
+init();
 
-  // ---------- Admin password ----------
-  const ADMIN_PASSWORD = "sudu123";
+async function init(){
+  attachUIHandlers();
+  await loadAndRenderProducts();
+  renderCartCount();
+}
 
-  // ---------- Helper functions ----------
-  function log(...a) {
-    // console.log(...a);
-  }
-
-  function formatLKR(v) {
-    const n = Number(v || 0);
-    return "LKR " + n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  }
-
-  function escapeHtml(str) {
-    if (!str) return "";
-    return String(str).replace(/[&<>"'`=\/]/g, function (s) {
-      return {
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#39;",
-        "/": "&#x2F;",
-        "`": "&#x60;",
-        "=": "&#x3D;",
-      }[s];
-    });
-  }
-
-  async function uploadFile(file) {
-    if (!supabase) return null;
-    try {
-      const path = `${Date.now()}_${file.name.replace(/\s+/g, "_")}`;
-      const { error } = await supabase.storage.from("product-images").upload(path, file);
-      if (error) {
-        console.error("Upload error:", error);
-        return null;
-      }
-      const { data: publicData } = supabase.storage.from("product-images").getPublicUrl(path);
-      return publicData.publicUrl;
-    } catch (err) {
-      console.error(err);
-      return null;
-    }
-  }
-
-  // ---------- Cart (localStorage) ----------
-  function getCart() {
-    try {
-      const raw = localStorage.getItem("sudu_cart");
-      return raw ? JSON.parse(raw) : [];
-    } catch {
-      return [];
-    }
-  }
-
-  function saveCart(cart) {
-    localStorage.setItem("sudu_cart", JSON.stringify(cart));
-    updateCartCountUI();
-  }
-
-  function addToCart(item) {
-    const cart = getCart();
-    const idx = cart.findIndex((c) => c.id === item.id && c.size === item.size && c.color === item.color);
-    if (idx > -1) cart[idx].qty = Number(cart[idx].qty) + Number(item.qty);
-    else cart.push(item);
-    saveCart(cart);
-  }
-
-  function updateCartCountUI() {
-    const count = getCart().reduce((s, it) => s + Number(it.qty || 0), 0);
-    cartCountEls.forEach((el) => (el.textContent = count));
-  }
-
-  // ---------- Admin UI handlers ----------
-  if (adminContainer) adminContainer.style.display = "none";
-
-  adminToggleBtn?.addEventListener("click", () => {
-    const pw = prompt("Enter admin password:");
-    if (pw === ADMIN_PASSWORD) adminContainer.style.display = "block";
-    else alert("Incorrect password");
-  });
-
-  document.querySelector(".close-btn")?.addEventListener("click", () => {
-    if (adminContainer) adminContainer.style.display = "none";
-  });
-
-  function renderAdminList(products) {
-    if (!productListAdmin) return;
-    productListAdmin.innerHTML = "";
-    if (!products || products.length === 0) {
-      productListAdmin.innerHTML = "<p>No products yet.</p>";
-      return;
-    }
-
-    products.forEach((p) => {
-      const row = document.createElement("div");
-      row.className = "product-item";
-      row.innerHTML = `
-        <img src="${p.images?.[0] || "https://via.placeholder.com/100"}" alt="">
-        <div class="info">
-          <h4>${escapeHtml(p.name)}</h4>
-          <p>${formatLKR(p.new_price)}</p>
-        </div>
-        <div class="actions">
-          <button class="edit-btn">Edit</button>
-          <button class="delete-btn">Delete</button>
-        </div>
-      `;
-      row.querySelector(".edit-btn").onclick = () => populateForm(p);
-      row.querySelector(".delete-btn").onclick = async () => {
-        if (!confirm(`Delete "${p.name}"?`)) return;
-        try {
-          await supabase.from("products").delete().eq("id", p.id);
-          await loadProducts();
-        } catch (err) {
-          console.error(err);
-        }
-      };
-      productListAdmin.appendChild(row);
-    });
-  }
-
-  function populateForm(p) {
-    if (!adminContainer || !productForm) return;
-    adminContainer.style.display = "block";
-    productForm.dataset.id = p.id;
-    productForm.querySelector("input[placeholder='Enter product name']").value = p.name || "";
-    productForm.querySelector("input[placeholder='0']").value = p.discount || "";
-    productForm.querySelector("input[placeholder='Enter SKU number']").value = p.sku || "";
-    const priceInputs = productForm.querySelectorAll("input[placeholder='0.00']");
-    if (priceInputs.length >= 1) priceInputs[0].value = p.new_price || "";
-    if (priceInputs.length >= 2) priceInputs[1].value = p.old_price || "";
-    productForm.querySelector("#category").value = p.category || "";
-    productForm.querySelector("input[placeholder='Enter size']").value = p.sizes || "";
-    productForm.querySelector("input[placeholder='write the Colour']").value = p.colour || "";
-    productForm.querySelector("textarea").value = p.description || "";
-    // stock radio
-    const radios = productForm.querySelectorAll("input[name='stock']");
-    radios.forEach((r) => {
-      const label = r.parentElement.textContent.trim();
-      r.checked = label.toLowerCase().includes((p.stock_status || "").toLowerCase());
-    });
-  }
-
-  // ---------- Product form submit (Add / Update) ----------
-  productForm?.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const name = productForm.querySelector("input[placeholder='Enter product name']").value.trim();
-    const discount = productForm.querySelector("input[placeholder='0']").value.trim();
-    const sku = productForm.querySelector("input[placeholder='Enter SKU number']").value.trim();
-    const priceInputs = productForm.querySelectorAll("input[placeholder='0.00']");
-    const newPrice = parseFloat(priceInputs[0].value || "0") || 0;
-    const oldPrice = parseFloat(priceInputs[1].value || "0") || 0;
-    const category = document.getElementById("category").value || "";
-    const sizes = productForm.querySelector("input[placeholder='Enter size']").value.trim();
-    const colour = productForm.querySelector("input[placeholder='write the Colour']").value.trim();
-    const stockEl = productForm.querySelector("input[name='stock']:checked");
-    const stock_status = stockEl ? stockEl.parentElement.textContent.trim() : "In Stock";
-    const description = productForm.querySelector("textarea").value.trim();
-    const fileInput = productForm.querySelector("input[type='file']");
-
-    let images = [];
-    if (fileInput && fileInput.files && fileInput.files.length > 0) {
-      for (let file of fileInput.files) {
-        const url = await uploadFile(file);
-        if (url) images.push(url);
-      }
-    }
-
-    const payload = {
-      name,
-      discount: discount || null,
-      sku,
-      new_price: newPrice,
-      old_price: oldPrice,
-      category,
-      sizes,
-      colour,
-      stock_status,
-      description,
-      images,
-    };
-
-    try {
-      const editingId = productForm.dataset.id;
-      if (editingId) {
-        await supabase.from("products").update(payload).eq("id", editingId);
-        alert("Product updated");
+// ----------------- UI handlers -----------------
+function attachUIHandlers(){
+  if (adminToggleBtn){
+    adminToggleBtn.addEventListener("click", () => {
+      const already = localStorage.getItem(ADMIN_LOCALFLAG);
+      if (already === "1") { showAdmin(); return; }
+      const pw = prompt("Enter admin password:");
+      if (pw === ADMIN_PASSWORD) {
+        localStorage.setItem(ADMIN_LOCALFLAG,"1");
+        showAdmin();
       } else {
-        await supabase.from("products").insert([payload]);
-        alert("Product added");
+        alert("Incorrect password.");
       }
-      productForm.reset();
-      delete productForm.dataset.id;
-      await loadProducts();
-    } catch (err) {
-      console.error(err);
-      alert("Save failed");
-    }
+    });
+  }
+  if (adminCloseBtn) adminCloseBtn.addEventListener("click", hideAdmin);
+
+  if (productForm) {
+    productForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      await handleAdminSaveProduct(e.target);
+    });
+  }
+
+  if (cartBtn) cartBtn.addEventListener("click", () => openCartPanel());
+
+  if (subscribeForm) {
+    subscribeForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = subscribeInput.value.trim();
+      if (!email) return alert("Please enter your email.");
+      alert("Thanks for subscribing!");
+      // attempt to insert (will fail unless RLS allows writes)
+      try {
+        await supabase.from("subscribers").insert([{ email }]);
+      } catch(err){ console.warn("Subscribe insert error:", err); }
+      subscribeInput.value = "";
+    });
+  }
+
+  if (decQty) decQty.addEventListener("click", ()=> { qtyInput.value = Math.max(1, Number(qtyInput.value||1)-1); });
+  if (incQty) incQty.addEventListener("click", ()=> { qtyInput.value = Number(qtyInput.value||1)+1; });
+
+  if (addCartBtn) addCartBtn.addEventListener("click", ()=> {
+    if (!currentProduct) return;
+    if (!currentProduct.in_stock) return alert("Out of stock.");
+    addCurrentProductToCart();
   });
 
-  // ---------- Load products from Supabase ----------
-  async function loadProducts() {
-    if (!supabase) return;
-    try {
-      const { data, error } = await supabase.from("products").select("*").order("id", { ascending: false });
-      if (error) {
-        console.error("Load products error:", error);
+  if (buyNowBtn) buyNowBtn.addEventListener("click", ()=> {
+    if (!currentProduct) return;
+    if (!currentProduct.in_stock) return alert("Out of stock.");
+    openCheckoutModal([buildCartItemFromCurrent()], "single");
+  });
+
+  if (prevBtn) prevBtn.addEventListener("click", ()=> showMainImage(mainImageIndex-1));
+  if (nextBtn) nextBtn.addEventListener("click", ()=> showMainImage(mainImageIndex+1));
+  if (mainImage) attachSwipe(mainImage);
+}
+
+// ----------------- Admin functions -----------------
+function showAdmin(){ if (!adminContainer) return; adminContainer.style.display="block"; renderAdminList(); }
+function hideAdmin(){ if (!adminContainer) return; adminContainer.style.display="none"; editingProductId = null; productForm.reset(); }
+
+// NOTE: Because your HTML uses duplicate placeholders for new/old price,
+// we select by order: first 0.00 is "New Price", second 0.00 is "Old Price".
+async function handleAdminSaveProduct(formEl){
+  // gather values
+  const name = formEl.querySelector('input[placeholder="Enter product name"]').value.trim();
+  const discountVal = formEl.querySelector('input[placeholder="0"]').value.trim(); // discount input
+  const sku = formEl.querySelector('input[placeholder="Enter SKU number"]').value.trim();
+
+  // Two inputs have placeholder "0.00" — first is New Price, second is Old Price
+  const priceInputs = formEl.querySelectorAll('input[placeholder="0.00"]');
+  const newPrice = priceInputs[0] ? priceInputs[0].value.trim() : "";
+  const oldPrice = priceInputs[1] ? priceInputs[1].value.trim() : "";
+
+  const files = formEl.querySelector('input[type="file"]').files;
+  const category = formEl.querySelector("#category") ? formEl.querySelector("#category").value : "";
+  const sizesText = formEl.querySelector('input[placeholder="Enter size"]').value.trim();
+  const coloursText = formEl.querySelector('input[placeholder="write the Colour"]').value.trim();
+  const desc = formEl.querySelector('textarea').value.trim();
+  const stockRadios = formEl.querySelectorAll('input[name="stock"]');
+  const inStock = stockRadios && stockRadios[0] && stockRadios[0].checked;
+
+  const sizesArr = sizesText ? sizesText.split(",").map(s=>s.trim()).filter(Boolean) : [];
+  const colorsArr = coloursText ? coloursText.split(",").map(s=>s.trim()).filter(Boolean) : [];
+
+  if (!name || !newPrice) return alert("Please add name and new price.");
+
+  // product payload
+  const payload = {
+    name,
+    sku,
+    price: Number(newPrice) || 0,
+    compare_price: oldPrice ? Number(oldPrice) : null,
+    discount_percent: discountVal ? Number(discountVal) : null,
+    in_stock: !!inStock,
+    stock_count: inStock ? 10 : 0,
+    sizes: sizesArr,
+    colors: colorsArr,
+    category,
+    description: desc,
+    demo: false
+  };
+
+  try {
+    if (editingProductId) {
+      // ---- UPDATE existing product (no new row) ----
+      const { error: updErr } = await supabase.from("products").update(payload).eq("id", editingProductId);
+      if (updErr) {
+        console.warn("Update failed (RLS?),", updErr.message);
+        alert("Update attempted but may have failed due to DB permissions.");
+      } else {
+        // upload images if provided
+        if (files && files.length) await uploadFilesForProduct(editingProductId, files);
+        alert("Product updated.");
+      }
+      editingProductId = null;
+    } else {
+      // ---- INSERT new product ----
+      const { data: created, error: insertErr } = await supabase.from("products").insert([payload]).select().single();
+      if (insertErr) {
+        console.warn("Insert failed:", insertErr.message);
+        alert("Insert attempted but may have failed due to DB permissions.");
         return;
       }
-      renderProductsGrid(data || []);
-      renderAdminList(data || []);
-    } catch (err) {
-      console.error(err);
+      const productId = created.id;
+      if (files && files.length) await uploadFilesForProduct(productId, files);
+      alert("Product added.");
     }
-  }
 
-  // ---------- Render product grid (interactive cards) ----------
-  function renderProductsGrid(products) {
-    if (!productGrid) return;
-    productGrid.innerHTML = "";
-    if (!products || products.length === 0) {
-      productGrid.innerHTML = "<p>No products available.</p>";
+    formEl.reset();
+    await loadAndRenderProducts();
+    renderAdminList();
+
+  } catch (err) {
+    console.error("Admin save error:", err);
+    alert("Unexpected error. See console.");
+  }
+}
+
+// Upload images to storage + insert product_images rows
+async function uploadFilesForProduct(productId, files){
+  for (let f of files){
+    const path = `${productId}/${Date.now()}_${sanitizeFilename(f.name)}`;
+    const { data: uploadData, error: uploadError } = await supabase.storage.from(STORAGE_BUCKET).upload(path, f, { cacheControl: '3600', upsert: false });
+    if (uploadError) {
+      console.warn("Upload error:", uploadError.message);
+      continue;
+    }
+    // insert mapping row (may fail if RLS blocks insert)
+    const { error: imgInsertErr } = await supabase.from("product_images").insert([{ product_id: productId, storage_path: path }]);
+    if (imgInsertErr) console.warn("product_images insert error:", imgInsertErr.message);
+  }
+}
+
+// Admin list rendering
+async function renderAdminList(){
+  if (!productListAdmin) return;
+  productListAdmin.innerHTML = "<p>Loading admin products...</p>";
+  try {
+    const { data: rows, error } = await supabase.from("products").select("*").order("created_at", { ascending: false });
+    if (error) {
+      productListAdmin.innerHTML = `<p>Unable to load admin list: ${error.message}</p>`;
       return;
     }
-
-    products.forEach((p) => {
-      const card = document.createElement("div");
-      card.className = "product-card";
-      card.dataset.id = p.id;
-      // Use container relative for badges if CSS expects that
-      const mainImageUrl = p.images?.[0] || "https://via.placeholder.com/400";
-      const discountHtml = p.discount ? `<div class='discount-badge'>-${p.discount}%</div>` : "";
-      const oldPriceHtml = p.old_price && Number(p.old_price) > 0 ? `<span class='old-price' style='text-decoration:line-through;opacity:0.55;'>${formatLKR(p.old_price)}</span>` : "";
-      card.innerHTML = `
-        ${discountHtml}
-        <div style="position:relative;">
-          <div class="stock-badge ${p.stock_status === "Out of Stock" ? "out-stock" : "in-stock"}">
-            ${p.stock_status || "In stock"}
+    productListAdmin.innerHTML = "";
+    rows.forEach(p => {
+      const outer = document.createElement("div");
+      outer.className = "admin-item";
+      outer.id = `adminProduct-${p.id}`;
+      outer.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <strong>${escapeHtml(p.name)}</strong><br/>
+            <small>${escapeHtml(p.category || "")}</small><br/>
+            SKU: ${escapeHtml(p.sku || "")} — ${fmtCurrency(p.price)}
+          </div>
+          <div>
+            <button class="adm-edit" data-id="${p.id}">Edit</button>
+            <button class="adm-delete" data-id="${p.id}">Delete</button>
           </div>
         </div>
-        <img src="${mainImageUrl}" alt="${escapeHtml(p.name || "Product")}">
-        <h3>${escapeHtml(p.name || "Untitled")}</h3>
-        <div class="price-row">
-          ${oldPriceHtml}
-          <span class="new-price">${formatLKR(p.new_price)}</span>
-        </div>
       `;
-      // When clicking on card, open the product page (full-screen)
-      card.addEventListener("click", () => {
-        openProductPage(p);
-      });
-      productGrid.appendChild(card);
-    });
-  }
-
-  // ---------- Product page behavior (hide other sections, show product-page) ----------
-  if (productPage) productPage.style.display = "none";
-
-  function hideMainSectionsExceptProductPage() {
-    // Hide header, non-product sections, footer, bottom nav
-    const selectors = ["header", "section", "footer", "nav"];
-    document.querySelectorAll(selectors.join(",")).forEach((el) => {
-      // product-page is a section with class .product-page nested in main container; remove only that
-      if (el.contains && el.classList && el.classList.contains && el.classList.contains("product-page")) {
-        // skip product page container if the selector accidentally matches it
-        return;
-      }
-      // But some "section" elements are the .product-page container's ancestors; we specifically want to hide
-      // all sections except the element that has class product-page (which is nested deeper).
-      if (!el.querySelector || !el.classList) {
-        // generic hide for header/footer/nav
-        el.style.display = "none";
-      } else {
-        // If element itself is the product-page, skip. If it *contains* the product-page, hide, because we want only product-page visible
-        const isProductSection = el.classList && el.classList.contains("product-page");
-        if (!isProductSection) {
-          el.style.display = "none";
-        }
-      }
+      productListAdmin.appendChild(outer);
     });
 
-    // Additionally hide any other elements except the productPage itself
-    // (This helps when productPage is nested inside a section; we'll explicitly show productPage)
-  }
+    $$(".adm-edit", productListAdmin).forEach(btn => btn.addEventListener("click", async (ev) => {
+      const id = ev.currentTarget.dataset.id;
+      const { data } = await supabase.from("products").select("*").eq("id", id).maybeSingle();
+      if (!data) return alert("Product not found.");
+      populateAdminForm(data);
+      editingProductId = id;
+      showAdmin();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }));
 
-  function showAllMainSections() {
-    // Reset inline display style to default to show everything again
-    document.querySelectorAll("header, section, footer, nav").forEach((el) => {
-      el.style.display = "";
-    });
-  }
-
-  // The main function to open a product's detail view
-  function openProductPage(p) {
-    currentProduct = p;
-    currentImageIndex = 0;
-
-    // Hide other sections (we'll show only productPage)
-    hideMainSectionsExceptProductPage();
-
-    // Show productPage fully
-    if (productPage) productPage.style.display = "block";
-
-    // Populate details
-    if (pName) pName.textContent = p.name || "-";
-    if (pSku) pSku.textContent = `SKU: ${p.sku || "-"}`;
-    if (pNewPrice) pNewPrice.textContent = formatLKR(p.new_price || 0);
-    if (pOldPrice) {
-      if (p.old_price && Number(p.old_price) > 0) {
-        pOldPrice.style.display = "";
-        pOldPrice.textContent = formatLKR(p.old_price);
-      } else {
-        pOldPrice.style.display = "none";
-      }
-    }
-    if (pDiscount) {
-      if (p.discount) {
-        pDiscount.style.display = "";
-        pDiscount.textContent = `-${p.discount}%`;
-      } else {
-        pDiscount.style.display = "none";
-      }
-    }
-    if (pStock) {
-      pStock.textContent = p.stock_status || "In stock";
-      pStock.className = (p.stock_status || "").toLowerCase().includes("out") ? "stock out" : "stock in";
-    }
-    // Description
-    const pDesc = document.getElementById("pDesc");
-    if (pDesc) pDesc.textContent = p.description || "—";
-
-    // Images & gallery
-    const images = Array.isArray(p.images) && p.images.length ? p.images : ["https://via.placeholder.com/800x600"];
-    if (mainImage) mainImage.src = images[0];
-    if (thumbsEl) {
-      thumbsEl.innerHTML = "";
-      images.forEach((url, i) => {
-        const img = document.createElement("img");
-        img.src = url;
-        img.alt = `${p.name || "Product"} ${i + 1}`;
-        if (i === 0) img.classList.add("active");
-        img.addEventListener("click", () => {
-          currentImageIndex = i;
-          mainImage.src = url;
-          thumbsEl.querySelectorAll("img").forEach((n) => n.classList.remove("active"));
-          img.classList.add("active");
-        });
-        thumbsEl.appendChild(img);
-      });
-    }
-
-    // Sizes & colors
-    populateSelectFromCSV(sizeSelect, p.sizes);
-    populateSelectFromCSV(colorSelect, p.colour);
-    if (qtyInput) qtyInput.value = 1;
-
-    // Related products
-    loadRelatedProducts(p.category, p.id);
-
-    // Scroll to top
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-
-  // ---------- Populate select from CSV helper ----------
-  function populateSelectFromCSV(selectEl, csv) {
-    if (!selectEl) return;
-    selectEl.innerHTML = "";
-    if (!csv) {
-      const opt = document.createElement("option");
-      opt.value = "";
-      opt.textContent = "—";
-      selectEl.appendChild(opt);
-      return;
-    }
-    const parts = String(csv).split(/[,\/|]+/).map((s) => s.trim()).filter(Boolean);
-    if (!parts.length) {
-      const opt = document.createElement("option");
-      opt.value = "";
-      opt.textContent = "—";
-      selectEl.appendChild(opt);
-      return;
-    }
-    parts.forEach((s) => {
-      const opt = document.createElement("option");
-      opt.value = s;
-      opt.textContent = s;
-      selectEl.appendChild(opt);
-    });
-  }
-
-  // ---------- Gallery prev/next ----------
-  prevBtn?.addEventListener("click", () => {
-    if (!currentProduct) return;
-    const images = currentProduct.images || [];
-    if (!images.length) return;
-    currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
-    mainImage.src = images[currentImageIndex];
-    thumbsEl.querySelectorAll("img").forEach((n, i) => n.classList.toggle("active", i === currentImageIndex));
-  });
-  nextBtn?.addEventListener("click", () => {
-    if (!currentProduct) return;
-    const images = currentProduct.images || [];
-    if (!images.length) return;
-    currentImageIndex = (currentImageIndex + 1) % images.length;
-    mainImage.src = images[currentImageIndex];
-    thumbsEl.querySelectorAll("img").forEach((n, i) => n.classList.toggle("active", i === currentImageIndex));
-  });
-
-  // ---------- Related products (same category) ----------
-  async function loadRelatedProducts(category, excludeId) {
-    if (!relatedGrid) return;
-    relatedGrid.innerHTML = "<p>Loading related...</p>";
-    try {
-      const { data, error } = await supabase.from("products").select("*").eq("category", category).neq("id", excludeId).limit(6);
+    $$(".adm-delete", productListAdmin).forEach(btn => btn.addEventListener("click", async (ev) => {
+      const id = ev.currentTarget.dataset.id;
+      if (!confirm("Delete this product? This removes it from storefront and admin.")) return;
+      // delete product -> product_images rows will cascade if foreign key cascade set (your schema uses on delete cascade)
+      const { error } = await supabase.from("products").delete().eq("id", id);
       if (error) {
-        console.error(error);
-        relatedGrid.innerHTML = "<p>Unable to load related products.</p>";
-        return;
+        console.warn("Delete error (RLS?):", error.message);
+        alert("Delete attempted but may have failed due to DB permissions.");
+      } else {
+        // update local UI
+        document.querySelector(`#adminProduct-${id}`)?.remove();
+        // remove from products array and re-render grid
+        products = products.filter(p => p.id !== id);
+        renderProductGrid();
+        alert("Product deleted.");
       }
-      relatedGrid.innerHTML = "";
-      (data || []).forEach((p) => {
-        const el = document.createElement("div");
-        el.className = "product-card";
-        el.innerHTML = `
-          <img src="${p.images?.[0] || "https://via.placeholder.com/400"}" alt="${escapeHtml(p.name)}">
-          <h4 style="margin:0.4rem 0 0.3rem">${escapeHtml(p.name)}</h4>
-          <div class="price-row"><span class="new-price">${formatLKR(p.new_price)}</span></div>
-        `;
-        el.addEventListener("click", () => {
-          // open related product in product page full-screen
-          openProductPage(p);
-        });
-        relatedGrid.appendChild(el);
+    }));
+
+  } catch (err) {
+    productListAdmin.innerHTML = "<p>Unexpected error loading admin list.</p>";
+    console.error(err);
+  }
+}
+
+function populateAdminForm(product){
+  if (!productForm) return;
+  productForm.querySelector('input[placeholder="Enter product name"]').value = product.name || "";
+  productForm.querySelector('input[placeholder="Enter SKU number"]').value = product.sku || "";
+  productForm.querySelector('input[placeholder="0"]').value = product.discount_percent || "";
+  const priceInputs = productForm.querySelectorAll('input[placeholder="0.00"]');
+  if (priceInputs[0]) priceInputs[0].value = product.price || "";
+  if (priceInputs[1]) priceInputs[1].value = product.compare_price || "";
+  productForm.querySelector('textarea').value = product.description || "";
+  if (productForm.querySelector("#category")) productForm.querySelector("#category").value = product.category || "";
+  productForm.querySelector('input[placeholder="Enter size"]').value = (product.sizes || []).join(", ");
+  productForm.querySelector('input[placeholder="write the Colour"]').value = (product.colors || []).join(", ");
+  // stock radios
+  const stockRadios = productForm.querySelectorAll('input[name="stock"]');
+  if (stockRadios && stockRadios.length >= 2){
+    if (product.in_stock) { stockRadios[0].checked = true; stockRadios[1].checked = false; }
+    else { stockRadios[0].checked = false; stockRadios[1].checked = true; }
+  }
+}
+
+// ----------------- Product loading & rendering -----------------
+async function loadAndRenderProducts(){
+  try {
+    const { data: prods, error } = await supabase.from("products").select("*").order("created_at", { ascending: false });
+    if (error) {
+      console.error("Load products error:", error);
+      return;
+    }
+    // fetch images for each product
+    const enriched = await Promise.all(prods.map(async p => {
+      const { data: imgs } = await supabase.from("product_images").select("*").eq("product_id", p.id).order("is_main", { ascending: false });
+      const mapped = (imgs || []).map(img => {
+        const { data } = supabase.storage.from(STORAGE_BUCKET).getPublicUrl(img.storage_path);
+        return { ...img, url: data.publicUrl, storage_path: img.storage_path };
       });
-      if ((data || []).length === 0) relatedGrid.innerHTML = "<p>No related products.</p>";
-    } catch (err) {
-      console.error(err);
-      relatedGrid.innerHTML = "<p>Error loading related.</p>";
-    }
+      return { ...p, images: mapped };
+    }));
+    products = enriched;
+    renderProductGrid();
+  } catch (err) {
+    console.error("loadAndRenderProducts error:", err);
+  }
+}
+
+function renderProductGrid(){
+  if (!productGrid) return;
+  productGrid.innerHTML = ""; // remove demo cards and replace
+
+  if (!products.length) {
+    productGrid.innerHTML = "<p>No products available.</p>";
+    return;
   }
 
-  // ---------- Quantity controls ----------
-  incQty?.addEventListener("click", () => {
-    if (!qtyInput) return;
-    qtyInput.value = Number(qtyInput.value || 1) + 1;
-  });
-  decQty?.addEventListener("click", () => {
-    if (!qtyInput) return;
-    qtyInput.value = Math.max(1, Number(qtyInput.value || 1) - 1);
-  });
+  products.forEach(prod => {
+    const card = document.createElement("div");
+    card.className = "product-card";
+    card.id = `storeProduct-${prod.id}`;
 
-  // ---------- Add to cart & Buy now ----------
-  addCartBtn?.addEventListener("click", () => {
-    if (!currentProduct) return alert("Please select a product first.");
-    const item = {
-      id: currentProduct.id,
-      name: currentProduct.name,
-      price: Number(currentProduct.new_price || 0),
-      size: sizeSelect ? sizeSelect.value : "",
-      color: colorSelect ? colorSelect.value : "",
-      qty: Number(qtyInput ? qtyInput.value : 1),
-      image: (currentProduct.images && currentProduct.images[0]) || "",
-    };
-    addToCart(item);
-    alert("Added to cart");
-  });
+    // stock/blur handling
+    const isOut = !prod.in_stock;
+    if (isOut) card.classList.add("out-of-stock");
 
-  buyNowBtn?.addEventListener("click", () => {
-    if (!currentProduct) return alert("Please select a product first.");
-    const cartItem = {
-      id: currentProduct.id,
-      qty: Number(qtyInput ? qtyInput.value : 1),
-      size: sizeSelect ? sizeSelect.value : "",
-      color: colorSelect ? colorSelect.value : "",
-    };
-    localStorage.setItem("sudu_buy_now", JSON.stringify({ product: cartItem, timestamp: Date.now() }));
-    window.alert("Proceed to checkout (placeholder). Implement payment gateway to complete.");
+    const mainImg = (prod.images && prod.images[0] && prod.images[0].url) || "placeholder.jpg";
+    const discountBadge = prod.discount_percent ? `<div class="discount-badge">${escapeHtml(String(prod.discount_percent))}% OFF</div>` : "";
+    // Price in grid: show both if compare_price exists
+    const oldPriceHtml = (prod.compare_price !== null && prod.compare_price !== undefined) ? `<p class="old-price">${fmtCurrency(prod.compare_price)}</p>` : "";
+    const newPriceHtml = `<p class="new-price">${fmtCurrency(prod.price)}</p>`;
+
+    // note: view detail button left enabled so admin or users can view; add-to-cart / buy controls are in detail view.
+    card.innerHTML = `
+      <div class="badge-stock">${isOut ? "Out of stock" : "In stock"}</div>
+      <img src="${mainImg}" alt="${escapeHtml(prod.name)}" class="product-img" />
+      ${discountBadge}
+      <div class="product-info">
+        <h3 class="brand">${escapeHtml(prod.brand || prod.name)}</h3>
+        <div class="price-section">
+          ${oldPriceHtml}
+          ${newPriceHtml}
+        </div>
+        <p class="desc">${escapeHtml(prod.description || "")}</p>
+      </div>
+      <button class="view-detail" data-id="${prod.id}">View Details</button>
+    `;
+    productGrid.appendChild(card);
   });
 
-  // ---------- Footer year ----------
-  if (footerYear) footerYear.textContent = new Date().getFullYear();
+  // attach listeners to view-detail and also apply out-of-stock visual styles
+  $$(".view-detail", productGrid).forEach(btn => btn.addEventListener("click", (ev) => {
+    const id = ev.currentTarget.dataset.id;
+    const prod = products.find(p => p.id === id);
+    if (!prod) return alert("Product not found.");
+    showProductDetail(prod);
+  }));
 
-  // ---------- Initialize: load products & update cart count ----------
-  updateCartCountUI();
-  loadProducts();
+  // optional: add CSS rules for .out-of-stock if not present
+  ensureOutOfStockCSS();
+}
 
-  // ---------- Optional: handle browser back (when user presses back, show sections again) ----------
-  // If user uses browser back button while in product detail view, the page may stay same, but we want to restore sections.
-  // We'll listen to popstate and also on hashchange as a fallback.
-  window.addEventListener("popstate", () => {
-    // If productPage is visible, hide it and show main sections
-    if (productPage && productPage.style.display !== "none") {
-      productPage.style.display = "none";
-      showAllMainSections();
-    }
+// ----------------- Product Detail (ORDER PRODUCT) -----------------
+function showProductDetail(prod){
+  currentProduct = prod;
+  currentImages = (prod.images || []).map(i => ({ storage_path: i.storage_path, url: i.url }));
+  if (!currentImages.length) currentImages = [{ url: prod.image || "placeholder.jpg", storage_path: null }];
+  mainImageIndex = 0;
+  showMainImage(0);
+
+  pName.textContent = prod.name || "Product name";
+  pSku.textContent = `SKU: ${prod.sku || "-"}`;
+  pDesc.textContent = prod.description || "—";
+  pNewPrice.textContent = fmtCurrency(prod.price || 0);
+  if (prod.compare_price) {
+    pOldPrice.style.display = "block";
+    pOldPrice.textContent = fmtCurrency(prod.compare_price);
+  } else {
+    pOldPrice.style.display = "none";
+  }
+  if (prod.discount_percent) {
+    pDiscount.style.display = "inline-block";
+    pDiscount.textContent = `-${prod.discount_percent}%`;
+  } else {
+    pDiscount.style.display = "none";
+  }
+
+  // stock UI: blur detail area and disable add/buy if out-of-stock
+  if (!prod.in_stock) {
+    pStock.className = "stock out";
+    pStock.textContent = "Out of stock";
+    productPage.classList.add("out-of-stock");
+    if (addCartBtn) { addCartBtn.disabled = true; addCartBtn.style.opacity = "0.5"; }
+    if (buyNowBtn) { buyNowBtn.disabled = true; buyNowBtn.style.opacity = "0.5"; }
+  } else {
+    pStock.className = "stock in";
+    pStock.textContent = "In stock";
+    productPage.classList.remove("out-of-stock");
+    if (addCartBtn) { addCartBtn.disabled = false; addCartBtn.style.opacity = ""; }
+    if (buyNowBtn) { buyNowBtn.disabled = false; buyNowBtn.style.opacity = ""; }
+  }
+
+  populateSelectFromArray(sizeSelect, prod.sizes || [], "Size");
+  populateSelectFromArray(colorSelect, prod.colors || [], "Colour");
+  renderRelated(prod);
+  productPage.scrollIntoView({ behavior: "smooth" });
+}
+
+function populateSelectFromArray(selEl, arr, label){
+  if (!selEl) return;
+  selEl.innerHTML = "";
+  if (!arr || !arr.length) {
+    const opt = document.createElement("option");
+    opt.value = "";
+    opt.textContent = `No ${label} available`;
+    selEl.appendChild(opt);
+    selEl.disabled = true;
+    return;
+  }
+  selEl.disabled = false;
+  arr.forEach(v => {
+    const opt = document.createElement("option");
+    opt.value = v;
+    opt.textContent = v;
+    selEl.appendChild(opt);
   });
+}
 
-  window.addEventListener("hashchange", () => {
-    if (productPage && productPage.style.display !== "none") {
-      // nothing special — user may use hash navigation
-    }
-  });
-
-  // ---------- Utility to show all sections (restore) ----------
-  function showAllMainSections() {
-    document.querySelectorAll("header, section, footer, nav").forEach((el) => {
-      el.style.display = "";
+function showMainImage(index){
+  if (!currentImages || !currentImages.length) return;
+  if (index < 0) index = currentImages.length-1;
+  if (index >= currentImages.length) index = 0;
+  mainImageIndex = index;
+  mainImage.src = currentImages[index].url;
+  if (thumbs) {
+    thumbs.innerHTML = "";
+    currentImages.forEach((img, i) => {
+      const t = document.createElement("img");
+      t.className = "thumb-item";
+      t.src = img.url;
+      t.dataset.idx = i;
+      t.addEventListener("click", ()=> showMainImage(i));
+      thumbs.appendChild(t);
     });
   }
+}
 
-  // Expose small functions for debug (optional)
-  window.SuduAraliyaDebug = {
-    openProductPage,
-    loadProducts,
-    addToCart,
-    getCart,
+function attachSwipe(el){
+  let startX = null;
+  el.addEventListener("touchstart", e => startX = e.touches[0].clientX);
+  el.addEventListener("touchend", e => {
+    if (startX === null) return;
+    const endX = e.changedTouches[0].clientX;
+    const dx = endX - startX;
+    if (Math.abs(dx) > 30) {
+      if (dx < 0) showMainImage(mainImageIndex + 1);
+      else showMainImage(mainImageIndex - 1);
+    }
+    startX = null;
+  });
+}
+
+function renderRelated(prod){
+  if (!relatedGrid) return;
+  relatedGrid.innerHTML = "";
+  const others = products.filter(p => p.id !== prod.id && p.category === prod.category).slice(0,4);
+  others.forEach(r => {
+    const el = document.createElement("div");
+    el.className = "related-item";
+    const img = (r.images && r.images[0] && r.images[0].url) || "placeholder.jpg";
+    el.innerHTML = `<img src="${img}" alt="${escapeHtml(r.name)}"><div>${escapeHtml(r.name)}</div><div>${fmtCurrency(r.price)}</div>`;
+    el.addEventListener("click", ()=> showProductDetail(r));
+    relatedGrid.appendChild(el);
+  });
+}
+
+// ----------------- Cart logic -----------------
+function loadCart(){ try { const raw = localStorage.getItem(CART_KEY); return raw ? JSON.parse(raw) : []; } catch(e){ return []; } }
+function saveCart(){ localStorage.setItem(CART_KEY, JSON.stringify(cart)); renderCartCount(); }
+function renderCartCount(){ const count = cart.reduce((s,it)=>s+(it.quantity||0),0); if (cartCountEl) cartCountEl.textContent = count; }
+
+function buildCartItemFromCurrent(){
+  const size = sizeSelect ? sizeSelect.value : "";
+  const color = colorSelect ? colorSelect.value : "";
+  const qty = Number(qtyInput.value || 1);
+  return {
+    product_id: currentProduct.id,
+    name: currentProduct.name,
+    sku: currentProduct.sku,
+    size,
+    color,
+    quantity: qty,
+    price: Number(currentProduct.price),
+    line_total: Number(currentProduct.price) * qty
   };
-})();
-// =========================
-// BACK TO SHOP BUTTON — Sudu Araliya
-// =========================
-const backBtn = document.getElementById("backToShop");
-if (backBtn) {
-  backBtn.addEventListener("click", () => {
-    // hide product page
-    const productPage = document.querySelector(".product-page");
-    if (productPage) productPage.style.display = "none";
+}
 
-    // show all other sections again
-    document.querySelectorAll("header, section, footer, nav").forEach(el => {
-      if (!el.classList.contains("product-page")) el.style.display = "";
+function addCurrentProductToCart(){
+  if (!currentProduct) return;
+  if (!currentProduct.in_stock) return alert("Out of stock.");
+  const item = buildCartItemFromCurrent();
+  const sameIdx = cart.findIndex(c => c.product_id === item.product_id && c.size === item.size && c.color === item.color);
+  if (sameIdx >= 0) {
+    cart[sameIdx].quantity += item.quantity;
+    cart[sameIdx].line_total = cart[sameIdx].quantity * cart[sameIdx].price;
+  } else {
+    cart.push(item);
+  }
+  saveCart();
+  alert("Added to cart.");
+}
+
+function openCartPanel(){
+  const modal = document.createElement("div");
+  modal.className = "cart-modal";
+  modal.style = "position:fixed;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:2000;";
+  const dialog = document.createElement("div");
+  dialog.style = "background:#fff;padding:1rem;border-radius:8px;max-width:600px;width:90%;max-height:80vh;overflow:auto;";
+  modal.appendChild(dialog);
+
+  if (!cart.length) {
+    dialog.innerHTML = `<h3>Your cart is empty</h3><button id="closeCart">Close</button>`;
+    document.body.appendChild(modal);
+    $("#closeCart", dialog).addEventListener("click", ()=> modal.remove());
+    return;
+  }
+
+  const rows = cart.map((it,i)=>`
+    <div style="display:flex;justify-content:space-between;align-items:center;margin:.5rem 0;border-bottom:1px solid #eee;padding-bottom:.5rem;">
+      <div>
+        <strong>${escapeHtml(it.name)}</strong><br/>
+        SKU: ${escapeHtml(it.sku||"-")} ${it.size? `| Size: ${escapeHtml(it.size)}` : ""} ${it.color? `| Color: ${escapeHtml(it.color)}` : ""}
+        <div>Qty: ${it.quantity} × ${fmtCurrency(it.price)}</div>
+      </div>
+      <div style="text-align:right;">
+        <div>${fmtCurrency(it.line_total)}</div>
+        <button class="remove-item" data-idx="${i}">Remove</button>
+      </div>
+    </div>
+  `).join("");
+
+  const total = cart.reduce((s,it) => s + (it.line_total || (it.quantity * it.price)), 0);
+
+  dialog.innerHTML = `
+    <h3>Your Cart</h3>
+    <div>${rows}</div>
+    <div style="text-align:right;margin-top:1rem"><strong>Total: ${fmtCurrency(total)}</strong></div>
+    <div style="display:flex;gap:.5rem;margin-top:1rem;justify-content:flex-end">
+      <button id="cartCancel">Cancel</button>
+      <button id="cartCheckout">Checkout</button>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  $$(".remove-item", dialog).forEach(b=> b.addEventListener("click", (ev)=> {
+    const idx = Number(ev.currentTarget.dataset.idx);
+    cart.splice(idx,1);
+    saveCart();
+    modal.remove();
+    openCartPanel();
+  }));
+
+  $("#cartCancel", dialog).addEventListener("click", ()=> modal.remove());
+  $("#cartCheckout", dialog).addEventListener("click", ()=> { modal.remove(); openCheckoutModal(cart, "cart"); });
+}
+
+function openCheckoutModal(items, type="cart"){
+  const modal = document.createElement("div");
+  modal.className = "checkout-modal";
+  modal.style = "position:fixed;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:2100;";
+  const dialog = document.createElement("div");
+  dialog.style = "background:#fff;padding:1rem;border-radius:8px;max-width:640px;width:95%;max-height:85vh;overflow:auto;";
+  modal.appendChild(dialog);
+
+  const total = items.reduce((s,it) => s + (it.line_total || (it.quantity * it.price)), 0);
+
+  dialog.innerHTML = `
+    <h3>Checkout</h3>
+    <form id="checkoutForm">
+      <div><label>Name</label><input name="name" required /></div>
+      <div><label>Address</label><input name="address" required /></div>
+      <div><label>Phone</label><input name="phone" required /></div>
+      <div>
+        <label>Payment Method</label>
+        <label><input type="radio" name="pmt" value="Cash on Delivery" checked /> Cash on Delivery</label>
+        <label><input type="radio" name="pmt" value="Bank Transfer" /> Bank Transfer</label>
+      </div>
+      <div style="margin-top:.5rem"><strong>Order total: ${fmtCurrency(total)}</strong></div>
+      <div style="display:flex;gap:.5rem;margin-top:1rem;justify-content:flex-end;">
+        <button type="button" id="checkoutCancel">Cancel</button>
+        <button type="submit" id="checkoutConfirm">Confirm</button>
+      </div>
+    </form>
+  `;
+
+  document.body.appendChild(modal);
+
+  $("#checkoutCancel", dialog).addEventListener("click", ()=> modal.remove());
+  $("#checkoutForm", dialog).addEventListener("submit", (ev) => {
+    ev.preventDefault();
+    const form = ev.target;
+    const name = form.name.value.trim();
+    const address = form.address.value.trim();
+    const phone = form.phone.value.trim();
+    const pmt = form.pmt.value || "Cash on Delivery";
+
+    let msg = `Order from ${name}%0APhone: ${phone}%0AAddress: ${encodeURIComponent(address)}%0APayment: ${encodeURIComponent(pmt)}%0A%0AItems:%0A`;
+    items.forEach(it => {
+      msg += `${encodeURIComponent(it.name)} - SKU:${encodeURIComponent(it.sku||"-")} - Size:${encodeURIComponent(it.size||"-")} - Color:${encodeURIComponent(it.color||"-")} - Qty:${it.quantity} - ${fmtCurrency(it.line_total || (it.quantity * it.price))}%0A`;
     });
+    msg += `%0ATotal: ${fmtCurrency(total)}`;
+    const waLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`;
+    window.open(waLink, "_blank");
 
-    // scroll to top
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (type === "cart") { cart = []; saveCart(); }
+    modal.remove();
   });
+}
+
+// ----------------- Utilities -----------------
+function sanitizeFilename(name){ return name.replace(/[^a-z0-9.\-_]/gi, "_"); }
+
+// ensure some CSS for out-of-stock if not present
+function ensureOutOfStockCSS(){
+  if (document.getElementById("sudu-outofstock-css")) return;
+  const css = `
+    .product-card.out-of-stock { filter: blur(1.2px); opacity: 0.7; pointer-events: auto; position: relative; }
+    .product-card.out-of-stock::after { content: "Out of Stock"; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); background: rgba(0,0,0,0.65); color:#fff; padding:6px 10px; border-radius:6px; font-weight:600; }
+    .product-page.out-of-stock .selectors, .product-page.out-of-stock .actions { opacity: 0.6; pointer-events: none; }
+  `;
+  const st = document.createElement("style");
+  st.id = "sudu-outofstock-css";
+  st.appendChild(document.createTextNode(css));
+  document.head.appendChild(st);
 }
