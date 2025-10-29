@@ -1,4 +1,3 @@
-
 // script.js (UPDATED fixes: delete sync, price display in grid, edit=update, out-of-stock blur+disable)
 
 // ----------------- Supabase init (keep your values) -----------------
@@ -181,9 +180,14 @@ async function handleAdminSaveProduct(formEl){
   };
 
   try {
+    // ---------- EDIT (UPDATE) ----------
     if (editingProductId) {
-      // ---- UPDATE existing product (no new row) ----
-      const { error: updErr } = await supabase.from("products").update(payload).eq("id", editingProductId);
+      // ---- UPDATE existing product ----
+      const { error: updErr } = await supabase
+        .from("products")
+        .update(payload)
+        .eq("id", editingProductId);
+
       if (updErr) {
         console.warn("Update failed (RLS?),", updErr.message);
         alert("Update attempted but may have failed due to DB permissions.");
@@ -191,8 +195,16 @@ async function handleAdminSaveProduct(formEl){
         // upload images if provided
         if (files && files.length) await uploadFilesForProduct(editingProductId, files);
         alert("Product updated.");
+
+        // ensure product grid + admin list update immediately
+        await loadAndRenderProducts();
+        await renderAdminList();
+
+        hideAdmin(); // optional: close admin panel
       }
       editingProductId = null;
+
+    // ---------- INSERT (NEW) ----------
     } else {
       // ---- INSERT new product ----
       const { data: created, error: insertErr } = await supabase.from("products").insert([payload]).select().single();
@@ -662,9 +674,145 @@ function ensureOutOfStockCSS(){
     .product-card.out-of-stock { filter: blur(1.2px); opacity: 0.7; pointer-events: auto; position: relative; }
     .product-card.out-of-stock::after { content: "Out of Stock"; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); background: rgba(0,0,0,0.65); color:#fff; padding:6px 10px; border-radius:6px; font-weight:600; }
     .product-page.out-of-stock .selectors, .product-page.out-of-stock .actions { opacity: 0.6; pointer-events: none; }
-  `;
-  const st = document.createElement("style");
+  `;const st = document.createElement("style");
   st.id = "sudu-outofstock-css";
   st.appendChild(document.createTextNode(css));
   document.head.appendChild(st);
+}
+
+// ----------------- CATEGORY FILTER (reuses renderer) -----------------
+// Optional: if you have .category-card nodes in HTML (as in your posted HTML), this attaches filter.
+document.addEventListener("DOMContentLoaded", () => {
+  const categoryCards = document.querySelectorAll(".category-card");
+  if (!categoryCards.length) return;
+
+  categoryCards.forEach((card) => {
+    card.addEventListener("click", async (e) => {
+      e.preventDefault();
+      const categoryName = card.querySelector("h3")?.textContent.trim();
+      const grid = document.querySelector(".product-grid");
+      if (!grid) return;
+      grid.innerHTML = `<p style="text-align:center;padding:20px;">Loading ${escapeHtml(categoryName || "products")}...</p>`;
+      try {
+        let { data: prods, error } = await supabase.from("products").select("*").order("created_at", { ascending: false });
+        if (error) throw error;
+        if (categoryName && categoryName !== "Mixed Collection") {
+          prods = prods.filter(p => p.category && p.category.toLowerCase() === categoryName.toLowerCase());
+        }
+        // Enrich images just like loadAndRenderProducts
+        const enriched = await Promise.all(prods.map(async p => {
+          const { data: imgs } = await supabase.from("product_images").select("*").eq("product_id", p.id).order("is_main", { ascending: false });
+          const mapped = (imgs || []).map(img => {
+            const { data } = supabase.storage.from(STORAGE_BUCKET).getPublicUrl(img.storage_path);
+            return { ...img, url: data.publicUrl, storage_path: img.storage_path };
+          });
+          return { ...p, images: mapped };
+        }));
+        products = enriched;
+        renderProductGrid();
+        grid.scrollIntoView({ behavior: "smooth" });
+      } catch (err) {
+        console.error("Category filter error:", err);
+        grid.innerHTML = `<p style="color:red;text-align:center;">Error loading ${escapeHtml(categoryName || "products")}.</p>`;
+      }
+    });
+  });
+});
+
+
+// =============================
+// CATEGORY FILTER SECTION (final)
+// =============================
+
+// This waits until categories exist in your HTML, e.g. <div class="category-card"><h3>Stationery</h3></div>
+document.addEventListener("DOMContentLoaded", () => {
+  const categoryCards = document.querySelectorAll(".category-card");
+  if (!categoryCards.length) return;
+
+  categoryCards.forEach((card) => {
+    card.addEventListener("click", async (e) => {
+      e.preventDefault();
+
+      const categoryName = card.querySelector("h3")?.textContent.trim();
+      const grid = document.querySelector(".product-grid");
+      if (!grid) return;
+
+      grid.innerHTML = `<p style="text-align:center;padding:20px;">Loading ${categoryName}...</p>`;
+
+      try {
+        // Fetch all products from Supabase
+        let { data: prods, error } = await supabase
+          .from("products")
+          .select("*")
+          .order("created_at", { ascending: false });
+
+        if (error) throw error;
+
+        // Filter if not "Mixed Collection"
+        if (categoryName && categoryName !== "Mixed Collection") {
+          prods = prods.filter(
+            (p) =>
+              p.category &&
+              p.category.toLowerCase() === categoryName.toLowerCase()
+          );
+        }
+
+        // Enrich with images (same as your loadAndRenderProducts)
+        const enriched = await Promise.all(
+          prods.map(async (p) => {
+            const { data: imgs } = await supabase
+              .from("product_images")
+              .select("*")
+              .eq("product_id", p.id)
+              .order("is_main", { ascending: false });
+
+            const mapped = (imgs || []).map((img) => {
+              const { data } = supabase.storage
+                .from(STORAGE_BUCKET)
+                .getPublicUrl(img.storage_path);
+              return { ...img, url: data.publicUrl, storage_path: img.storage_path };
+            });
+            return { ...p, images: mapped };
+          })
+        );
+
+        // Reuse your normal renderer
+        products = enriched;
+        renderProductGrid();
+
+        // scroll nicely
+        grid.scrollIntoView({ behavior: "smooth" });
+      } catch (err) {
+        console.error("Category filter error:", err);
+        grid.innerHTML = `<p style="color:red;text-align:center;">Error loading ${categoryName}.</p>`;
+      }
+    });
+  });
+});
+
+// ----------------- Subscribe form handler -----------------
+if (subscribeForm && subscribeInput) {
+  subscribeForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const email = subscribeInput.value.trim();
+    if (!email) return alert("Please enter your email.");
+
+    try {
+      const { data, error } = await supabase
+        .from("subscriptions") // உங்கள் table name
+        .insert([{ email }]);
+
+      if (error) {
+        console.warn("Subscribe insert error:", error.message);
+        alert("Subscription failed. Try again.");
+      } else {
+        alert("Thanks for subscribing!");
+        subscribeInput.value = "";
+      }
+    } catch (err) {
+      console.error("Unexpected subscribe error:", err);
+      alert("Something went wrong. Check console.");
+    }
+  });
 }
