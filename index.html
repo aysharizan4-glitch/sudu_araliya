@@ -38,94 +38,97 @@
     </div>
   </header>
 
-  <!-- =========================
-       ADMIN PANEL SECTION
-       ========================= -->
-  <div class="admin-container">
-    <header class="admin-header">
-      <h2>🛍 Product Admin Panel</h2>
-      <button class="close-btn">Close</button>
-    </header>
+<!-- =========================
+     ADMIN PANEL SECTION — FIXED STRUCTURE
+     ========================= -->
+<div class="admin-container">
+  <header class="admin-header">
+    <h2>🛍 Product Admin Panel</h2>
+    <button class="close-btn">Close</button>
+  </header>
 
-    <form class="product-form">
-      <div class="form-group">
-        <label>Name</label>
-        <input type="text" placeholder="Enter product name">
-      </div>
+  <form class="product-form">
+    <div class="form-group">
+      <label>Name</label>
+      <input type="text" placeholder="Enter product name">
+    </div>
 
-      <div class="form-group">
-        <label>Discount Off (%)</label>
-        <input type="number" placeholder="0">
-      </div>
+    <div class="form-group">
+      <label>Discount Off (%)</label>
+      <input type="number" placeholder="0">
+    </div>
 
-      <div class="form-group">
-        <label>SKU No</label>
-        <input type="number" placeholder="Enter SKU number">
-      </div>
+    <div class="form-group">
+      <label>SKU No</label>
+      <input type="number" placeholder="Enter SKU number">
+    </div>
 
-      <div class="form-group">
-        <label>New Price (LKR)</label>
-        <input type="number" step="0.01" placeholder="0.00">
-      </div>
+    <div class="form-group">
+      <label>New Price (LKR)</label>
+      <input type="number" step="0.01" placeholder="0.00">
+    </div>
 
-      <div class="form-group">
-        <label>Old Price (LKR)</label>
-        <input type="number" step="0.01" placeholder="0.00">
-      </div>
+    <div class="form-group">
+      <label>Old Price (LKR)</label>
+      <input type="number" step="0.01" placeholder="0.00">
+    </div>
 
-      <div class="form-group">
-        <label>Upload Images</label>
-        <input type="file" accept="image/*" multiple>
-      </div>
-<div class="form-group">
-   <label>Category</label> 
-   <select id="category"> 
-    <option>Frocks</option> 
-    <option>Skirts</option> 
-    <option>Tops and Blouses</option> 
-    <option>Denim Jeans</option> 
-    <option>Leggings</option> 
-    <option>Leggings & Palazzo Bottoms</option> 
-  </select> 
-</div> 
-<div class="form-group"> 
-  <label>Sizes</label> 
-  <input type="text" placeholder="Enter size">
- </div>
+    <div class="form-group">
+      <label>Upload Images</label>
+      <input type="file" accept="image/*" multiple>
+    </div>
 
- <div class="form-group">
-        <label>Colour</label>
-        <input type="text" placeholder="write the Colour">
-      </div>
+    <div class="form-group">
+      <label>Category</label>
+      <select id="category">
+        <option>Frocks</option>
+        <option>Skirts</option>
+        <option>Tops and Blouses</option>
+        <option>Denim Jeans</option>
+        <option>Leggings & Palazzo Bottoms</option>
+      </select>
+    </div>
 
-<div class="form-group">
-        <label>Stock Status</label>
-        <div class="radio-group">
-          <label><input type="radio" name="stock" checked> In Stock</label>
-          <label><input type="radio" name="stock"> Out of Stock</label>
-        </div>
-      </div>
+    <div class="form-group">
+      <label>Sizes</label>
+      <input type="text" placeholder="Enter size">
+    </div>
 
-      <div class="form-group">
-        <label>Description</label>
-        <textarea placeholder="Enter product description"></textarea>
-      </div>
+    <div class="form-group">
+      <label>Colour</label>
+      <input type="text" placeholder="write the Colour">
+    </div>
 
-      <div class="form-actions">
-        <button type="submit" class="save-btn">Add / Save Product</button>
+    <div class="form-group">
+      <label>Stock Status</label>
+      <div class="radio-group">
+        <label><input type="radio" name="stock" checked> In Stock</label>
+        <label><input type="radio" name="stock"> Out of Stock</label>
       </div>
-    </form>
+    </div>
 
-      <div class="product-list">
-          </div>
-            <div button class="edit-btn">Edit</button>
-            <button class="delete-btn">Delete</button>
-          </div>
-        </div>
-      </div>
-    </section>
+    <div class="form-group">
+      <label>Description</label>
+      <textarea placeholder="Enter product description"></textarea>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="save-btn">Add / Save Product</button>
+    </div>
+  </form>
+
+  <div class="product-list">
+    <!-- Optional product list area -->
+    <div class="product-actions">
+      <button class="edit-btn">Edit</button>
+      <button class="delete-btn">Delete</button>
+    </div>
   </div>
+</div>
 
+
+
+  
 <!-- =========================
      HERO SECTION — Sudu Araliya
      ========================= -->
@@ -138,7 +141,12 @@
     </p>
     <a href="#collections" class="btn-buy">🌹 Browse Categories</a>
   </div>
+<!-- ADMIN PANEL TOGGLE BUTTON -->
+<button id="adminToggleBtn" class="admin-toggle-btn">
+  <span>⚙️</span>
+</button>  
 </section>
+ 
 <!-- =========================
      CATEGORY SECTION — Sudu Araliya
      ========================= -->
@@ -423,10 +431,7 @@ use same my color and button design.
       © <span id="year"></span> Sudu_Araliya — Designed & Developed with 💖
     </p>
   </div>
-  <!-- ADMIN PANEL TOGGLE BUTTON -->
-<button id="adminToggleBtn" class="admin-toggle-btn">
-  <span>⚙️</span> Admin Panel
-</button>
+ 
 </footer>
 
 

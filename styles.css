@@ -971,22 +971,12 @@ button {
   position: absolute;
   bottom: 15px;
   right: 15px;
-  background: #fac503;
-  color: #101010;
+  background: #fac4031c;
+  color: #10101036;
   border: none;
   border-radius: 0;
-  padding: 0.6rem 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-  transition: all 0.3s ease;
-}
-
-.admin-toggle-btn:hover {
-  background: #f8d9e2;
-  transform: translateY(-2px);
-}
-
+  padding: 0.6rem 1rem; }
+  
 /* =======================================
    RESPONSIVE DESIGN
    ======================================= */
@@ -1072,4 +1062,690 @@ button {
   .site-footer {
     padding-bottom: 8rem;
   }
+}
+/* ==============================
+   SUDU ARALIYA — CART & FORMS (gold / black / leaf green)
+   Override-ready (uses !important where needed)
+   Paste at end of your main CSS file
+   ============================== */
+
+:root{
+  --sudu-gold: #D4AF37;
+  --sudu-black: #0b0b0b;
+  --sudu-leaf: #2E8B57;
+  --glass-white: rgba(255,255,255,0.90);
+  --muted: rgba(11,11,11,0.06);
+  --radius-lg: 16px;
+}
+
+/* Ensure cart / checkout modals sit on top and use our visuals
+   JS sets inline styles; we override with !important as needed */
+.cart-modal,
+.checkout-modal {
+  position: fixed !important;
+  inset: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 99999 !important;
+  background: rgba(0,0,0,0.6) !important;
+  backdrop-filter: blur(6px) !important;
+}
+
+/* Dialog container (JS sets inline style — override) */
+.cart-modal > div,
+.checkout-modal > div {
+  background: linear-gradient(180deg, rgba(255,255,255,0.97), rgba(245,243,238,0.95)) !important;
+  border-radius: var(--radius-lg) !important;
+  padding: 1.25rem !important;
+  max-width: 720px !important;
+  width: 92% !important;
+  max-height: 86vh !important;
+  overflow-y: auto !important;
+  box-shadow: 0 10px 40px rgba(11,11,11,0.45) !important;
+  border: 1px solid rgba(11,11,11,0.06) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  backdrop-filter: blur(8px) !important;
+  color: var(--sudu-black) !important;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+/* Header */
+.cart-modal h3,
+.checkout-modal h3 {
+  margin: 0 0 0.9rem 0;
+  font-size: 1.4rem;
+  text-align: center;
+  color: var(--sudu-black);
+  letter-spacing: 0.2px;
+  font-weight: 700;
+}
+
+/* Cart rows area: card-like */
+.cart-modal .cart-rows,
+.checkout-modal .cart-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.cart-modal .cart-row,
+.checkout-modal .cart-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem;
+  border-radius: 10px;
+  background: linear-gradient(180deg, rgba(250,248,246,0.8), rgba(245,245,243,0.6));
+  border: 1px solid rgba(11,11,11,0.04);
+  box-shadow: 0 4px 12px rgba(11,11,11,0.04);
+}
+
+/* Item info */
+.cart-modal .cart-row .item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  max-width: 70%;
+}
+.cart-modal .cart-row .item-info strong {
+  font-size: 1rem;
+  color: var(--sudu-black);
+}
+.cart-modal .cart-row .item-info small {
+  display: block;
+  color: rgba(0,0,0,0.48);
+  font-size: 0.85rem;
+}
+
+/* Price & actions */
+.cart-modal .cart-row .item-actions {
+  text-align: right;
+  min-width: 110px;
+}
+.cart-modal .cart-row .item-actions .line-total {
+  font-weight: 700;
+  color: var(--sudu-black);
+  margin-bottom: 6px;
+}
+.cart-modal button.remove-item {
+  background: transparent !important;
+  border: 1px solid var(--sudu-gold) !important;
+  color: var(--sudu-gold) !important;
+  padding: 6px 8px !important;
+  border-radius: 8px !important;
+  cursor: pointer !important;
+  font-weight: 600 !important;
+  font-size: 0.85rem !important;
+}
+.cart-modal button.remove-item:hover {
+  background: var(--sudu-gold) !important;
+  color: var(--sudu-black) !important;
+}
+
+/* Totals & bottom actions */
+.cart-modal .cart-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.9rem;
+  padding-top: 0.6rem;
+  border-top: 1px dashed rgba(11,11,11,0.06);
+}
+.cart-modal .cart-summary strong {
+  font-size: 1.05rem;
+  color: var(--sudu-black);
+}
+
+/* Buttons (Cancel / Checkout / Confirm) */
+#cartCancel,
+#checkoutCancel,
+#cartCheckout,
+#checkoutConfirm {
+  border-radius: 10px !important;
+  padding: 0.6rem 0.95rem !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  border: none !important;
+}
+
+/* Gray / neutral */
+#cartCancel,
+#checkoutCancel {
+  background: transparent !important;
+  border: 1px solid rgba(11,11,11,0.08) !important;
+  color: var(--sudu-black) !important;
+}
+
+/* Primary (Checkout / Confirm) */
+#cartCheckout,
+#checkoutConfirm {
+  background: linear-gradient(90deg, var(--sudu-gold), #cfa12b) !important;
+  color: var(--sudu-black) !important;
+  box-shadow: 0 6px 18px rgba(212,175,55,0.18) !important;
+}
+#cartCheckout:hover,
+#checkoutConfirm:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 26px rgba(46,139,87,0.12);
+}
+
+/* ==============================
+   CHECKOUT FORM FIELDS (styled for desktop + mobile)
+   ============================== */
+#checkoutForm {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+#checkoutForm > div { display:flex; flex-direction:column; gap:0.3rem; }
+
+#checkoutForm label {
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--sudu-black);
+}
+
+#checkoutForm input[type="text"],
+#checkoutForm input[name="name"],
+#checkoutForm input[name="address"],
+#checkoutForm input[name="phone"] {
+  padding: 0.6rem 0.75rem !important;
+  border-radius: 10px !important;
+  border: 1px solid rgba(11,11,11,0.12) !important;
+  background: rgba(255,255,255,0.95) !important;
+  font-size: 0.95rem !important;
+  outline: none !important;
+}
+#checkoutForm input:focus {
+  border-color: var(--sudu-leaf) !important;
+  box-shadow: 0 6px 18px rgba(46,139,87,0.06) !important;
+}
+
+/* Payment method row spans both columns */
+#checkoutForm div[style]{
+  grid-column: 1 / -1;
+}
+
+/* Confirm row (buttons) spans both columns */
+#checkoutForm .confirm-row {
+  grid-column: 1 / -1;
+  display:flex;
+  justify-content:flex-end;
+  gap:0.6rem;
+}
+
+/* ==============================
+   QUICK UTILITY / ELEMENT STYLING (match site look)
+   ============================== */
+
+/* Cart count badge */
+.cart-count {
+  background: var(--sudu-gold) !important;
+  color: var(--sudu-black) !important;
+  border-radius: 999px !important;
+  padding: 2px 7px !important;
+  font-weight: 700 !important;
+  font-size: 0.85rem !important;
+  box-shadow: 0 4px 12px rgba(212,175,55,0.12) !important;
+}
+
+/* Cart button */
+.cart-btn {
+  background: linear-gradient(90deg, var(--sudu-black), rgba(11,11,11,0.9)) !important;
+  color: var(--sudu-gold) !important;
+  border: 1px solid rgba(212,175,55,0.12) !important;
+  padding: 8px 12px !important;
+  border-radius: 10px !important;
+  cursor: pointer !important;
+  font-weight: 700 !important;
+}
+
+/* Add-to-cart and Buy now */
+.add-cart-btn,
+#buyNow {
+  background: linear-gradient(90deg, var(--sudu-leaf), #2aa86b) !important;
+  color: #fff !important;
+  padding: 10px 14px !important;
+  border-radius: 12px !important;
+  border: none !important;
+  font-weight: 800 !important;
+  box-shadow: 0 8px 20px rgba(46,139,87,0.12) !important;
+}
+.add-cart-btn[disabled],
+#buyNow[disabled] {
+  opacity: 0.45 !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+}
+
+/* Product page selectors/actions blur when out-of-stock (JS toggles class) */
+.product-page.out-of-stock .selectors,
+.product-page.out-of-stock .actions {
+  opacity: 0.55 !important;
+  pointer-events: none !important;
+  filter: grayscale(0.05) blur(0.3px) !important;
+}
+
+/* Product card out-of-stock visuals (in case ensureOutOfStockCSS runs or not) */
+.product-card.out-of-stock {
+  filter: grayscale(0.15) blur(0.6px) !important;
+  opacity: 0.65 !important;
+  position: relative !important;
+}
+.product-card.out-of-stock::after {
+  content: "OUT OF STOCK" !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%,-50%) !important;
+  background: rgba(11,11,11,0.78) !important;
+  color: var(--sudu-gold) !important;
+  padding: 8px 12px !important;
+  border-radius: 10px !important;
+  font-weight: 800 !important;
+  letter-spacing: 1px !important;
+}
+
+/* Small devices: make checkout form single column and dialogs full width */
+@media (max-width: 720px) {
+  .cart-modal > div,
+  .checkout-modal > div {
+    width: 98% !important;
+    padding: 0.9rem !important;
+    border-radius: 12px !important;
+  }
+
+  #checkoutForm {
+    grid-template-columns: 1fr !important;
+  }
+
+  .cart-modal .cart-row .item-info {
+    max-width: 58%;
+  }
+
+  .cart-modal .cart-row .item-actions {
+    min-width: 90px;
+  }
+}
+
+/* tiny tweak to ensure clickable buttons inside injected dialogs look consistent */
+.cart-modal button,
+.checkout-modal button {
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+/* ===============================
+   ADMIN PANEL — FIXED CSS
+================================= */
+
+.admin-panel {
+  position: fixed;
+  top: 50px;
+  right: 0;
+  width: 350px;
+  max-width: 100%;
+  height: 90%;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: -2px 4px 12px rgba(0, 0, 0, 0.2);
+  border-radius: 10px 0 0 10px;
+  z-index: 1500;
+  display: none; /* hidden by default */
+  flex-direction: column;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+}
+
+/* ADMIN HEADER */
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background: linear-gradient(90deg, #32CD32, #228B22); /* gradient green */
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.admin-header h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.admin-header .close-btn {
+  background-color: #228B22;
+  border: none;
+  color: white;
+  font-size: 18px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.admin-header .close-btn:hover {
+  background-color: #32CD32;
+}
+
+/* PRODUCT LIST */
+.product-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+.product-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.product-item img {
+  width: 50px;
+  height: 50px;
+  border-radius: 5px;
+  object-fit: cover;
+}
+
+.product-item .info {
+  flex: 1;
+  margin-left: 10px;
+}
+
+.product-item .info h4 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.product-item .info p {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: #555;
+}
+
+/* BUTTONS */
+.edit-btn, .delete-btn, .save-btn, .cancel-btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.3s ease;
+}
+
+.edit-btn {
+  background-color: #228B22;
+  color: white;
+}
+
+.edit-btn:hover {
+  background-color: #32CD32;
+}
+
+.delete-btn {
+  background-color: #B22222;
+  color: white;
+}
+
+.delete-btn:hover {
+  background-color: #FF4500;
+}
+
+.save-btn {
+  background-color: #228B22;
+  color: white;
+}
+
+.save-btn:hover {
+  background-color: #32CD32;
+}
+
+.cancel-btn {
+  background-color: #555;
+  color: white;
+}
+
+.cancel-btn:hover {
+  background-color: #333;
+}
+
+/* PRODUCT FORM */
+.product-form {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.product-form label {
+  font-size: 14px;
+  color: #333;
+}
+
+.product-form input,
+.product-form select,
+.product-form textarea {
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-form input:focus,
+.product-form select:focus,
+.product-form textarea:focus {
+  border-color: #32CD32;
+  box-shadow: 0 0 5px rgba(50, 205, 50, 0.5);
+}
+
+/* SCROLLBAR STYLE */
+.product-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.product-list::-webkit-scrollbar-thumb {
+  background-color: rgba(50, 205, 50, 0.7);
+  border-radius: 3px;
+}
+
+.product-list::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* RESPONSIVE */
+@media screen and (max-width: 500px) {
+  .admin-panel {
+    width: 100%;
+    top: 0;
+    height: 100%;
+    border-radius: 0;
+  }
+}
+/* ==============================
+   ADMIN PANEL — SUDU ARALIYA (Gold / Black / Leaf Green)
+   ============================== */
+.admin-panel,
+#adminContainer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 380px;
+  height: 100vh;
+  background: rgba(11, 11, 11, 0.9);
+  backdrop-filter: blur(10px);
+  border-left: 2px solid var(--sudu-gold);
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.3);
+  z-index: 99999;
+  color: var(--sudu-gold);
+  transform: translateX(100%);
+  transition: transform 0.4s ease-in-out;
+  overflow-y: auto;
+}
+
+.admin-panel.active,
+#adminContainer.active {
+  transform: translateX(0%);
+}
+
+.admin-panel h3,
+#adminContainer h3 {
+  text-align: center;
+  padding: 1rem 0;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--sudu-gold);
+  background: linear-gradient(90deg, rgba(212,175,55,0.1), transparent);
+  border-bottom: 1px solid rgba(212,175,55,0.2);
+}
+
+.admin-panel form,
+#adminContainer form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  padding: 1rem 1.5rem;
+}
+
+.admin-panel label,
+#adminContainer label {
+  font-weight: 600;
+  color: var(--sudu-gold);
+  font-size: 0.9rem;
+}
+
+.admin-panel input[type="text"],
+.admin-panel input[type="number"],
+.admin-panel input[type="file"],
+#adminContainer input[type="text"],
+#adminContainer input[type="number"],
+#adminContainer input[type="file"],
+.admin-panel select,
+#adminContainer select,
+.admin-panel textarea,
+#adminContainer textarea {
+  padding: 0.6rem 0.8rem;
+  border-radius: 8px;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--sudu-gold);
+  font-size: 0.9rem;
+  outline: none;
+  transition: 0.3s;
+}
+
+.admin-panel input:focus,
+.admin-panel textarea:focus,
+#adminContainer input:focus,
+#adminContainer textarea:focus,
+#adminContainer select:focus {
+  border-color: var(--sudu-leaf);
+  box-shadow: 0 0 10px rgba(46, 139, 87, 0.3);
+}
+
+.admin-panel button,
+#adminContainer button {
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  transition: 0.3s;
+}
+
+
+
+/* ====== Admin Form Buttons ====== */
+#adminSaveBtn,
+#adminCancelBtn,
+#adminDeleteBtn {
+  border-radius: 10px;
+  font-weight: 700;
+  padding: 0.6rem 0.9rem;
+  margin-top: 0.4rem;
+}
+
+#adminSaveBtn {
+  background: linear-gradient(90deg, var(--sudu-leaf), #2aa86b);
+  color: #fff;
+}
+#adminSaveBtn:hover {
+  background: var(--sudu-gold);
+  color: var(--sudu-black);
+}
+
+#adminCancelBtn {
+  background: rgba(255,255,255,0.1);
+  color: var(--sudu-gold);
+  border: 1px solid rgba(255,255,255,0.15);
+}
+#adminCancelBtn:hover {
+  background: rgba(212,175,55,0.1);
+  color: var(--sudu-gold);
+}
+
+#adminDeleteBtn {
+  background: transparent;
+  border: 1px solid #ff4b4b;
+  color: #ff4b4b;
+}
+#adminDeleteBtn:hover {
+  background: #ff4b4b;
+  color: #fff;
+}
+
+/* ====== Product List Section ====== */
+.admin-panel .product-list,
+#adminContainer .product-list {
+  margin-top: 1rem;
+  padding: 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.admin-panel .product-item,
+#adminContainer .product-item {
+  background: rgba(255,255,255,0.05);
+  border-radius: 10px;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid rgba(212,175,55,0.1);
+  color: var(--sudu-gold);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: 0.3s;
+}
+.admin-panel .product-item:hover,
+#adminContainer .product-item:hover {
+  background: rgba(212,175,55,0.1);
+}
+
+/* ====== Responsive ====== */
+@media (max-width: 768px) {
+  .admin-panel,
+  #adminContainer {
+    width: 100%;
+    border-left: none;
+    border-top: 3px solid var(--sudu-gold);
+    height: 90vh;
+  }
+
+  .admin-panel h3,
+  #adminContainer h3 {
+    font-size: 1.2rem;
+  }
+
 }
