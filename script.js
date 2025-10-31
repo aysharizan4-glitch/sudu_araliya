@@ -700,6 +700,10 @@ document.addEventListener("DOMContentLoaded", () => {
           prods = prods.filter(p => p.category && p.category.toLowerCase() === categoryName.toLowerCase());
         }
         // Enrich images just like loadAndRenderProducts
+// hide demo products
+prods = prods.filter(p => !p.demo);
+
+
         const enriched = await Promise.all(prods.map(async p => {
           const { data: imgs } = await supabase.from("product_images").select("*").eq("product_id", p.id).order("is_main", { ascending: false });
           const mapped = (imgs || []).map(img => {
@@ -815,4 +819,98 @@ if (subscribeForm && subscribeInput) {
       alert("Something went wrong. Check console.");
     }
   });
+}
+
+// =========================================================
+// PATCH: Fix for Edit + Save not updating in Supabase
+// =========================================================
+async function handleAdminSaveProduct(formEl){
+  // gather values
+  const name = formEl.querySelector('input[placeholder="Enter product name"]').value.trim();
+  const discountVal = formEl.querySelector('input[placeholder="0"]').value.trim();
+  const sku = formEl.querySelector('input[placeholder="Enter SKU number"]').value.trim();
+
+  const priceInputs = formEl.querySelectorAll('input[placeholder="0.00"]');
+  const newPrice = priceInputs[0]?.value.trim() || "";
+  const oldPrice = priceInputs[1]?.value.trim() || "";
+
+  const files = formEl.querySelector('input[type="file"]').files;
+  const category = formEl.querySelector("#category")?.value || "";
+  const sizesText = formEl.querySelector('input[placeholder="Enter size"]').value.trim();
+  const coloursText = formEl.querySelector('input[placeholder="write the Colour"]').value.trim();
+  const desc = formEl.querySelector('textarea').value.trim();
+  const stockRadios = formEl.querySelectorAll('input[name="stock"]');
+  const inStock = stockRadios[0]?.checked;
+
+  const sizesArr = sizesText ? sizesText.split(",").map(s=>s.trim()).filter(Boolean) : [];
+  const colorsArr = coloursText ? coloursText.split(",").map(s=>s.trim()).filter(Boolean) : [];
+
+  if (!name || !newPrice) return alert("Please add name and price.");
+
+  const payload = {
+    name,
+    sku,
+    price: Number(newPrice) || 0,
+    compare_price: oldPrice ? Number(oldPrice) : null,
+    discount_percent: discountVal ? Number(discountVal) : null,
+    in_stock: !!inStock,
+    stock_count: inStock ? 10 : 0,
+    sizes: sizesArr,
+    colors: colorsArr,
+    category,
+    description: desc,
+    demo: false
+  };
+
+  try {
+    if (editingProductId) {
+      console.log("🧩 Updating product:", editingProductId, payload);
+
+      const { data, error } = await supabase
+        .from("products")
+        .update(payload)
+        .eq("id", editingProductId)
+        .select();
+
+      if (error) {
+        console.error("Update failed:", error.message);
+        alert("❌ Update failed: " + error.message);
+        return;
+      }
+
+      // upload images if provided
+      if (files && files.length) await uploadFilesForProduct(editingProductId, files);
+
+      alert("✅ Product updated successfully.");
+      editingProductId = null;
+      formEl.reset();
+      await loadAndRenderProducts();
+      await renderAdminList();
+      hideAdmin();
+    } else {
+      // Insert new product
+      const { data: created, error: insertErr } = await supabase
+        .from("products")
+        .insert([payload])
+        .select()
+        .single();
+
+      if (insertErr) {
+        console.error("Insert failed:", insertErr.message);
+        alert("❌ Insert failed: " + insertErr.message);
+        return;
+      }
+
+      const productId = created.id;
+      if (files && files.length) await uploadFilesForProduct(productId, files);
+
+      alert("✅ Product added successfully.");
+      formEl.reset();
+      await loadAndRenderProducts();
+      await renderAdminList();
+    }
+  } catch (err) {
+    console.error("Admin Save Product Error:", err);
+    alert("Unexpected error. See console.");
+  }
 }
