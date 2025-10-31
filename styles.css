@@ -936,8 +936,9 @@ button {
 }
 
 .subscribe-input {
+  width: 85%;
   padding: 0.8rem 1rem;
-  border-radius: 50px 0 50px 0;
+  border-radius: 0;
   border: none;
   width: 260px;
   max-width: 100%;
@@ -945,12 +946,13 @@ button {
 }
 
 .subscribe-btn {
+  width: 50%;
   background: #fac002;
   color: #111111;
-  font-weight: 600;
+  font-weight: 800;
   border: none;
-  border-radius: 50px 0 50px 0;
-  padding: 0.8rem 1.4rem;
+  border-radius: 0 0px 0 0px;
+  padding: 0.8rem 1.1rem;
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -1030,7 +1032,7 @@ button {
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: #fce306;
+  color: #fccb06;
   font-size: 0.8rem;
   text-decoration: none;
   transition: all 0.3s ease;
@@ -1043,7 +1045,7 @@ button {
 
 .bottom-nav .nav-item.active,
 .bottom-nav .nav-item:hover {
-  color: #f4c20d;
+  color: #05e727;
 }
 
 .bottom-nav .nav-item:hover svg {
@@ -1284,13 +1286,13 @@ button {
 
 /* Cart count badge */
 .cart-count {
-  background:  black;
-  color: goldenrod;
-  border-radius: 999px !important;
-  padding: 2px 7px !important;
+  background:  rgba(246, 193, 3, 0.386);
+  color: rgb(10, 10, 10);
+  border-radius: 5px !important;
+  padding: 6px 12px !important;
   font-weight: 700 !important;
-  font-size: 0.85rem !important;
-  box-shadow: 0 4px 12px rgba(212,175,55,0.12) !important;
+  font-size: 1.5rem !important;
+  box-shadow: 0 4px 12px rgba(8, 8, 8, 0.536) !important;
 }
 
 /* Cart button */
@@ -1304,23 +1306,6 @@ button {
   font-weight: 700 !important;
 }
 
-/* Add-to-cart and Buy now */
-.add-cart-btn,
-#buyNow {
-  background: linear-gradient(90deg, var(--sudu-leaf), #2aa86b) !important;
-  color: #fff !important;
-  padding: 10px 14px !important;
-  border-radius: 12px !important;
-  border: none !important;
-  font-weight: 800 !important;
-  box-shadow: 0 8px 20px rgba(46,139,87,0.12) !important;
-}
-.add-cart-btn[disabled],
-#buyNow[disabled] {
-  opacity: 0.45 !important;
-  cursor: not-allowed !important;
-  transform: none !important;
-}
 
 /* Product page selectors/actions blur when out-of-stock (JS toggles class) */
 .product-page.out-of-stock .selectors,
